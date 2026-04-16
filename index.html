@@ -43,9 +43,9 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .link-copy{background:white;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
 .link-copy:hover{background:var(--amber);color:white;border-color:var(--amber)}
 .qr-customizer{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;margin:1rem 0;display:flex;flex-direction:column;gap:10px}
-.qr-opt-row{display:flex;align-items:center;gap:12px}
+.qr-opt-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .qr-opt-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);min-width:80px;font-weight:500}
-.qr-opt-row select{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;cursor:pointer;outline:none}
+.qr-opt-row select,.qr-opt-row input[type=range]{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;cursor:pointer;outline:none}
 .color-group{display:flex;align-items:center;gap:8px;flex:1}
 .color-group input[type=color]{width:40px;height:32px;border:1px solid var(--border);border-radius:6px;cursor:pointer;padding:2px;background:white}
 .color-presets{display:flex;gap:4px}
@@ -59,6 +59,8 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .action-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
 .action-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:1px solid var(--border);background:white;color:var(--forest);transition:all 0.15s;font-weight:500}
 .action-btn:hover{background:var(--forest);color:white;border-color:var(--forest)}
+.action-btn.primary{background:var(--amber);color:white;border-color:var(--amber)}
+.action-btn.primary:hover{background:var(--forest);border-color:var(--forest)}
 .qr-area{display:flex;flex-direction:column;align-items:center;gap:10px}
 .qr-area canvas,.qr-area img{max-width:300px;height:auto;display:block}
 .team-section{margin-top:2rem}
@@ -87,62 +89,144 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .toast.error{background:#A33D2D}
 @media(max-width:900px){.main{grid-template-columns:1fr}.result-body{grid-template-columns:1fr}}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--pale);border-radius:16px;max-width:1100px;width:100%;max-height:95vh;overflow-y:auto;padding:1.5rem;display:grid;grid-template-columns:1fr 320px;gap:1.25rem}
+.modal-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:white;border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;z-index:10}
+.wp-preview-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative}
+.wp-title{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--forest);margin-bottom:0.25rem}
+.wp-sub{font-size:12px;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem}
+.iphone-frame{position:relative;background:#000;border-radius:40px;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);width:260px;aspect-ratio:1170/2532}
+.iphone-screen{position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#e5e5e5;cursor:move;user-select:none}
+.iphone-notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:80px;height:22px;background:#000;border-radius:18px;z-index:5;pointer-events:none}
+.wp-bg-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.wp-qr-box{position:absolute;cursor:grab;border:2px dashed rgba(255,255,255,0.6);background:rgba(255,255,255,0.85);border-radius:10px;padding:6px;display:flex;align-items:center;justify-content:center;touch-action:none}
+.wp-qr-box:active{cursor:grabbing}
+.wp-qr-box canvas{width:100%;height:100%;display:block}
+.wp-controls{display:flex;flex-direction:column;gap:12px}
+.wp-controls h4{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--forest);margin-bottom:6px}
+.wp-control-group{background:white;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.wp-control-group label{font-size:11px;color:var(--light);text-transform:uppercase;letter-spacing:0.08em;margin:0}
+.wp-control-group input[type=range]{width:100%}
+.wp-bg-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.wp-bg-preset{aspect-ratio:9/16;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s;background-size:cover;background-position:center}
+.wp-bg-preset.active{border-color:var(--amber)}
+.wp-info{font-size:11px;color:var(--light);padding:8px;background:rgba(75,92,62,0.05);border-radius:6px;line-height:1.5}
+@media(max-width:900px){.modal{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div style="display:flex;align-items:center;gap:10px">
-    <div class="logo-mark">P</div>
-    <div><div class="topbar-title">Prominall Cards</div></div>
-  </div>
-  <div class="topbar-sub">Digital Business Card System</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div class="logo-mark">P</div>
+<div><div class="topbar-title">Prominall Cards</div></div>
+</div>
+<div class="topbar-sub">Digital Business Card System</div>
 </div>
 <div class="main">
-  <aside class="sidebar">
-    <div class="section-title">Create / Edit Card</div>
-    <div class="edit-banner" id="edit-banner"></div>
-    <div class="form-group">
-      <label>Full Name *</label>
-      <input type="text" id="f-name" placeholder="e.g. Azmi Ciloglu" oninput="updateSlugPreview()">
-      <div class="id-preview" id="slug-preview">ID will appear here</div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Job Title</label><input type="text" id="f-title" placeholder="Export Manager"></div>
-      <div class="form-group"><label>Company</label><input type="text" id="f-company" value="Prominall GmbH"></div>
-    </div>
-    <div class="divider"></div>
-    <div class="form-group"><label>Phone</label><input type="tel" id="f-phone" placeholder="+49 421 123 4567"></div>
-    <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="name@prominall.com"></div>
-    <div class="form-group"><label>Website</label><input type="url" id="f-web" placeholder="prominall.com"></div>
-    <div class="form-group"><label>LinkedIn</label><input type="text" id="f-linkedin" placeholder="linkedin.com/in/username"></div>
-    <div class="form-group"><label>Location</label><input type="text" id="f-addr" placeholder="Bremen, Germany"></div>
-    <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="f-photo" placeholder="https://..."></div>
-    <button class="btn-generate" id="btn-generate" onclick="generateCard()">Generate Card</button>
-    <button class="btn-save" id="btn-save" onclick="saveCard()">+ Save to Database</button>
-    <button class="btn-save-update-mode" id="btn-update" onclick="saveCard()">Update Card</button>
-    <button class="btn-cancel" id="btn-cancel" onclick="cancelEdit()">Cancel editing</button>
-  </aside>
-  <section class="content">
-    <div class="host-banner">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>Cards stored on <strong><a href="https://firebase.google.com" target="_blank" style="color:var(--amber)">Firebase Realtime Database</a></strong>. QR codes use a <strong>permanent ID</strong>.</span>
-    </div>
-    <div id="result-area"></div>
-    <div class="team-section">
-      <div class="team-header">
-        <div class="section-title" style="margin:0">Team Members</div>
-        <div class="team-count" id="team-count"></div>
-      </div>
-      <div class="team-grid" id="team-grid"><div class="loading-team">Loading...</div></div>
-    </div>
-  </section>
+<aside class="sidebar">
+<div class="section-title">Create / Edit Card</div>
+<div class="edit-banner" id="edit-banner"></div>
+<div class="form-group">
+<label>Full Name *</label>
+<input type="text" id="f-name" placeholder="e.g. Azmi Ciloglu" oninput="updateSlugPreview()">
+<div class="id-preview" id="slug-preview">ID will appear here</div>
 </div>
+<div class="form-row">
+<div class="form-group"><label>Job Title</label><input type="text" id="f-title" placeholder="Export Manager"></div>
+<div class="form-group"><label>Company</label><input type="text" id="f-company" value="Prominall GmbH"></div>
+</div>
+<div class="divider"></div>
+<div class="form-group"><label>Phone</label><input type="tel" id="f-phone" placeholder="+49 421 123 4567"></div>
+<div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="name@prominall.com"></div>
+<div class="form-group"><label>Website</label><input type="url" id="f-web" placeholder="prominall.com"></div>
+<div class="form-group"><label>LinkedIn</label><input type="text" id="f-linkedin" placeholder="linkedin.com/in/username"></div>
+<div class="form-group"><label>Location</label><input type="text" id="f-addr" placeholder="Bremen, Germany"></div>
+<div class="form-group"><label>Photo URL (optional)</label><input type="url" id="f-photo" placeholder="https://..."></div>
+<button class="btn-generate" id="btn-generate" onclick="generateCard()">Generate Card</button>
+<button class="btn-save" id="btn-save" onclick="saveCard()">+ Save to Database</button>
+<button class="btn-save-update-mode" id="btn-update" onclick="saveCard()">Update Card</button>
+<button class="btn-cancel" id="btn-cancel" onclick="cancelEdit()">Cancel editing</button>
+</aside>
+<section class="content">
+<div class="host-banner">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+<span>Cards stored on <strong><a href="https://firebase.google.com" target="_blank" style="color:var(--amber)">Firebase Realtime Database</a></strong>. QR codes use a <strong>permanent ID</strong>.</span>
+</div>
+<div id="result-area"></div>
+<div class="team-section">
+<div class="team-header">
+<div class="section-title" style="margin:0">Team Members</div>
+<div class="team-count" id="team-count"></div>
+</div>
+<div class="team-grid" id="team-grid"><div class="loading-team">Loading...</div></div>
+</div>
+</section>
+</div>
+
+<div class="modal-overlay" id="wp-modal">
+<div class="modal" style="position:relative">
+<button class="modal-close" onclick="closeWallpaper()">×</button>
+<div class="wp-preview-wrap">
+<div class="wp-title">iPhone Wallpaper Studio</div>
+<div class="wp-sub">QR'ı sürükleyerek konumlandır · boyutu ayarla · indir</div>
+<div class="iphone-frame">
+<div class="iphone-screen" id="wp-screen">
+<img class="wp-bg-img" id="wp-bg" alt="">
+<div class="iphone-notch"></div>
+<div class="wp-qr-box" id="wp-qr-box" style="width:40%;aspect-ratio:1;left:30%;top:60%"><canvas id="wp-qr-canvas"></canvas></div>
+</div>
+</div>
+<div class="wp-info" style="max-width:260px;text-align:center">1170 × 2532 px · iPhone 13/14/15 boyutu</div>
+</div>
+<div class="wp-controls">
+<h4>Ayarlar</h4>
+<div class="wp-control-group">
+<label>Arka Plan Resmi</label>
+<input type="file" id="wp-bg-file" accept="image/*" onchange="uploadWallpaperBg(event)" style="display:none">
+<button class="logo-btn" onclick="document.getElementById('wp-bg-file').click()">Resim Yükle</button>
+<div class="wp-bg-presets" id="wp-bg-presets"></div>
+</div>
+<div class="wp-control-group">
+<label>QR Boyutu: <span id="wp-size-val">40</span>%</label>
+<input type="range" id="wp-qr-size" min="15" max="85" value="40" oninput="updateQRSize(this.value)">
+</div>
+<div class="wp-control-group">
+<label>QR Rengi</label>
+<div style="display:flex;gap:8px;align-items:center">
+<input type="color" id="wp-qr-color" value="#000000" onchange="updateWpQR()">
+<div class="color-presets">
+<button class="preset-btn" style="background:#000000" onclick="setWpColor('#000000')"></button>
+<button class="preset-btn" style="background:#FFFFFF;border:1px solid #ccc" onclick="setWpColor('#FFFFFF')"></button>
+<button class="preset-btn" style="background:#C37113" onclick="setWpColor('#C37113')"></button>
+<button class="preset-btn" style="background:#2C3625" onclick="setWpColor('#2C3625')"></button>
+</div>
+</div>
+</div>
+<div class="wp-control-group">
+<label>QR Arkaplan Opaklığı: <span id="wp-bg-op-val">85</span>%</label>
+<input type="range" id="wp-bg-opacity" min="0" max="100" value="85" oninput="updateBgOpacity(this.value)">
+</div>
+<div class="wp-control-group">
+<label>Logo</label>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<button class="logo-btn" onclick="wpUseProminall()">Prominall Logo</button>
+<button class="logo-btn logo-remove" onclick="wpRemoveLogo()">Logo Kaldır</button>
+</div>
+</div>
+<button class="action-btn primary" onclick="downloadWallpaper()" style="justify-content:center;padding:12px">📱 iPhone Wallpaper İndir (HD)</button>
+<div class="wp-info">💡 <b>İpucu:</b> QR'ı parmağınla sürükleyerek konumlandır. Kilit ekranında ideal pozisyon saat altındadır.</div>
+</div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 <script>
 const FIREBASE_URL = 'https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
 let currentSlug = '', editMode = false, editingId = '', teamData = [];
 let qrOptions = { size: 300, fgColor: '#2C3625', bgColor: '#FFFFFF', logo: null, logoSize: 0.25 };
-
+let wpState = { bgImg: null, qrX: 0.30, qrY: 0.60, qrSize: 0.40, qrColor: '#000000', bgOpacity: 0.85, logo: null };
 const EI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
 const CI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
 const DI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>';
@@ -156,63 +240,35 @@ function updateSlugPreview(){const n=document.getElementById('f-name').value.tri
 function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
 function getFormData(){return{name:document.getElementById('f-name').value.trim(),title:document.getElementById('f-title').value.trim(),company:document.getElementById('f-company').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),web:document.getElementById('f-web').value.trim(),linkedin:document.getElementById('f-linkedin').value.trim(),addr:document.getElementById('f-addr').value.trim(),photo:document.getElementById('f-photo').value.trim()}}
 
-// Gelişmiş QR kod üretici - renk ve logo destekli
 function renderQR(url, containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
   const size = qrOptions.size;
-  
-  // Önce standart QR kod oluştur (canvas)
   const tempDiv = document.createElement('div');
-  new QRCode(tempDiv, {
-    text: url,
-    width: size,
-    height: size,
-    colorDark: qrOptions.fgColor,
-    colorLight: qrOptions.bgColor,
-    correctLevel: QRCode.CorrectLevel.H
-  });
-  
-  // Canvas'ı al
+  new QRCode(tempDiv, { text: url, width: size, height: size, colorDark: qrOptions.fgColor, colorLight: qrOptions.bgColor, correctLevel: QRCode.CorrectLevel.H });
   setTimeout(() => {
     const srcCanvas = tempDiv.querySelector('canvas');
     if (!srcCanvas) { container.appendChild(tempDiv); return; }
-    
-    // Yeni canvas oluştur - logo için
     const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    canvas.style.maxWidth = '100%';
-    canvas.style.height = 'auto';
-    canvas.style.display = 'block';
+    canvas.width = size; canvas.height = size;
+    canvas.style.maxWidth = '100%'; canvas.style.height = 'auto'; canvas.style.display = 'block';
     const ctx = canvas.getContext('2d');
-    
-    // Arka plan
-    ctx.fillStyle = qrOptions.bgColor;
-    ctx.fillRect(0, 0, size, size);
-    // QR kodu çiz
+    ctx.fillStyle = qrOptions.bgColor; ctx.fillRect(0, 0, size, size);
     ctx.drawImage(srcCanvas, 0, 0, size, size);
-    
-    // Logo ekle
     if (qrOptions.logo) {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
+      const img = new Image(); img.crossOrigin = 'anonymous';
       img.onload = () => {
         const logoSize = size * qrOptions.logoSize;
         const pad = logoSize * 0.1;
         const x = (size - logoSize) / 2;
         const y = (size - logoSize) / 2;
-        // Beyaz kare arka plan (QR'ı korur)
         ctx.fillStyle = qrOptions.bgColor;
         ctx.fillRect(x - pad, y - pad, logoSize + pad*2, logoSize + pad*2);
-        // Logo
         ctx.drawImage(img, x, y, logoSize, logoSize);
       };
-      img.onerror = () => { console.warn('Logo yuklenemedi'); };
       img.src = qrOptions.logo;
     }
-    
     container.appendChild(canvas);
   }, 50);
 }
@@ -231,15 +287,16 @@ function generateCard() {
     '<div class="link-box"><div class="link-label">Card ID</div><div class="link-url"><span class="link-text" style="font-family:monospace">' + slug + '</span><button class="link-copy" onclick="copySlug()">Copy</button></div></div>' +
     '<div class="qr-customizer">' +
     '<div class="qr-opt-row"><label class="qr-opt-label">Boyut</label><select id="qr-size" onchange="updateQROption()"><option value="200">Küçük (200px)</option><option value="300" selected>Orta (300px)</option><option value="500">Büyük (500px)</option><option value="800">Çok Büyük (800px)</option><option value="1200">HD Baskı (1200px)</option></select></div>' +
-    '<div class="qr-opt-row"><label class="qr-opt-label">QR Rengi</label><div class="color-group"><input type="color" id="qr-fg" value="' + qrOptions.fgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#2C3625" onclick="setQRColor(\'#2C3625\')" title="Forest"></button><button class="preset-btn" style="background:#000000" onclick="setQRColor(\'#000000\')" title="Siyah"></button><button class="preset-btn" style="background:#C37113" onclick="setQRColor(\'#C37113\')" title="Amber"></button><button class="preset-btn" style="background:#1E40AF" onclick="setQRColor(\'#1E40AF\')" title="Mavi"></button><button class="preset-btn" style="background:#991B1B" onclick="setQRColor(\'#991B1B\')" title="Kirmizi"></button></div></div></div>' +
-    '<div class="qr-opt-row"><label class="qr-opt-label">Arka Plan</label><div class="color-group"><input type="color" id="qr-bg" value="' + qrOptions.bgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#FFFFFF;border:1px solid #ccc" onclick="setQRBg(\'#FFFFFF\')" title="Beyaz"></button><button class="preset-btn" style="background:#F7F4E9" onclick="setQRBg(\'#F7F4E9\')" title="Krem"></button><button class="preset-btn" style="background:transparent;border:1px dashed #999" onclick="setQRBg(\'transparent\')" title="Seffaf"></button></div></div></div>' +
-    '<div class="qr-opt-row"><label class="qr-opt-label">Logo</label><div class="logo-controls"><input type="file" id="qr-logo-file" accept="image/*" onchange="uploadLogo(event)" style="display:none"><button class="logo-btn" onclick="document.getElementById(\'qr-logo-file\').click()">Logo Yukle</button><button class="logo-btn" onclick="useDefaultLogo()">Prominall Logo</button>' + (qrOptions.logo ? '<button class="logo-btn logo-remove" onclick="removeLogo()">Logoyu Kaldir</button>' : '') + '</div></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">QR Rengi</label><div class="color-group"><input type="color" id="qr-fg" value="' + qrOptions.fgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#2C3625" onclick="setQRColor(\'#2C3625\')"></button><button class="preset-btn" style="background:#000000" onclick="setQRColor(\'#000000\')"></button><button class="preset-btn" style="background:#C37113" onclick="setQRColor(\'#C37113\')"></button><button class="preset-btn" style="background:#1E40AF" onclick="setQRColor(\'#1E40AF\')"></button><button class="preset-btn" style="background:#991B1B" onclick="setQRColor(\'#991B1B\')"></button></div></div></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">Arka Plan</label><div class="color-group"><input type="color" id="qr-bg" value="' + qrOptions.bgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#FFFFFF;border:1px solid #ccc" onclick="setQRBg(\'#FFFFFF\')"></button><button class="preset-btn" style="background:#F7F4E9" onclick="setQRBg(\'#F7F4E9\')"></button><button class="preset-btn" style="background:transparent;border:1px dashed #999" onclick="setQRBg(\'transparent\')"></button></div></div></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">Logo</label><div class="logo-controls"><input type="file" id="qr-logo-file" accept="image/*" onchange="uploadLogo(event)" style="display:none"><button class="logo-btn" onclick="document.getElementById(\'qr-logo-file\').click()">Logo Yükle</button><button class="logo-btn" onclick="useDefaultLogo()">Prominall Logo</button>' + (qrOptions.logo ? '<button class="logo-btn logo-remove" onclick="removeLogo()">Logoyu Kaldır</button>' : '') + '</div></div>' +
     '</div>' +
     '<div class="action-row">' +
     '<a href="' + url + '" target="_blank" class="action-btn">Open Card</a>' +
-    '<button class="action-btn" onclick="downloadQR()">PNG Indir</button>' +
-    '<button class="action-btn" onclick="downloadQRHD()">HD Indir (1200px)</button>' +
-    '<button class="action-btn" onclick="printQR()">Yazdir</button>' +
+    '<button class="action-btn" onclick="downloadQR()">PNG İndir</button>' +
+    '<button class="action-btn" onclick="downloadQRHD()">HD İndir (1200px)</button>' +
+    '<button class="action-btn" onclick="printQR()">Yazdır</button>' +
+    '<button class="action-btn primary" onclick="openWallpaper()">📱 iPhone Wallpaper</button>' +
     '</div></div>' +
     '<div class="qr-area">' +
     '<div id="qr-display" style="padding:16px;background:white;border:1px solid var(--border);border-radius:12px;display:inline-block"></div>' +
@@ -257,43 +314,246 @@ function updateQROption() {
   const sizeLabel = document.querySelector('.qr-area div:last-child');
   if (sizeLabel) sizeLabel.textContent = qrOptions.size + 'x' + qrOptions.size + ' px';
 }
+function setQRColor(color) { qrOptions.fgColor = color; document.getElementById('qr-fg').value = color; updateQROption(); }
+function setQRBg(color) { qrOptions.bgColor = color === 'transparent' ? '#FFFFFF' : color; document.getElementById('qr-bg').value = qrOptions.bgColor; updateQROption(); }
+function uploadLogo(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { qrOptions.logo = e.target.result; generateCard(); showToast('Logo eklendi!'); }; reader.readAsDataURL(file); }
+function useDefaultLogo() {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
+  qrOptions.logo = 'data:image/svg+xml;base64,' + btoa(svg);
+  generateCard(); showToast('Prominall logosu eklendi!');
+}
+function removeLogo() { qrOptions.logo = null; generateCard(); showToast('Logo kaldırıldı'); }
 
-function setQRColor(color) {
-  qrOptions.fgColor = color;
-  document.getElementById('qr-fg').value = color;
-  updateQROption();
+// ============ iPhone Wallpaper Studio ============
+const WP_PRESETS = [
+  { name: 'Forest', val: 'linear-gradient(160deg,#2C3625,#4A5C3E,#607D5E)' },
+  { name: 'Amber',  val: 'linear-gradient(160deg,#C37113,#F7B955,#F7F4E9)' },
+  { name: 'Night',  val: 'linear-gradient(180deg,#0F172A,#1E293B,#334155)' },
+  { name: 'Sunset', val: 'linear-gradient(180deg,#FF6B6B,#FFD93D,#6BCB77)' },
+  { name: 'Ocean',  val: 'linear-gradient(180deg,#1E40AF,#3B82F6,#93C5FD)' },
+  { name: 'Rose',   val: 'linear-gradient(160deg,#881337,#BE185D,#F9A8D4)' },
+  { name: 'Mint',   val: 'linear-gradient(160deg,#065F46,#10B981,#A7F3D0)' },
+  { name: 'Paper',  val: 'linear-gradient(180deg,#F7F4E9,#E5DFC9)' }
+];
+
+function gradientToDataURL(gradient) {
+  const c = document.createElement('canvas');
+  c.width = 1170; c.height = 2532;
+  const ctx = c.getContext('2d');
+  const m = gradient.match(/linear-gradient\(([^,]+),(.+)\)/);
+  if (!m) { ctx.fillStyle = '#2C3625'; ctx.fillRect(0,0,1170,2532); return c.toDataURL(); }
+  const angle = m[1].trim();
+  const stops = m[2].match(/#[0-9A-Fa-f]{6}/g) || ['#2C3625','#4A5C3E'];
+  let g;
+  if (angle.includes('180')) g = ctx.createLinearGradient(0,0,0,2532);
+  else g = ctx.createLinearGradient(0,0,1170,2532);
+  stops.forEach((s,i) => g.addColorStop(i/(stops.length-1), s));
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,1170,2532);
+  return c.toDataURL();
 }
 
-function setQRBg(color) {
-  qrOptions.bgColor = color === 'transparent' ? '#FFFFFF' : color;
-  document.getElementById('qr-bg').value = qrOptions.bgColor;
-  updateQROption();
+function openWallpaper() {
+  if (!currentSlug) { showToast('Önce kart oluştur', true); return; }
+  const modal = document.getElementById('wp-modal');
+  modal.classList.add('show');
+  const presetContainer = document.getElementById('wp-bg-presets');
+  presetContainer.innerHTML = '';
+  WP_PRESETS.forEach((p, i) => {
+    const b = document.createElement('div');
+    b.className = 'wp-bg-preset';
+    b.style.background = p.val;
+    b.title = p.name;
+    b.onclick = () => selectPreset(i);
+    presetContainer.appendChild(b);
+  });
+  selectPreset(0);
+  setupQRDrag();
+  updateWpQR();
 }
 
-function uploadLogo(event) {
+function selectPreset(idx) {
+  const preset = WP_PRESETS[idx];
+  document.querySelectorAll('.wp-bg-preset').forEach((e, i) => e.classList.toggle('active', i === idx));
+  const dataUrl = gradientToDataURL(preset.val);
+  wpState.bgImg = dataUrl;
+  document.getElementById('wp-bg').src = dataUrl;
+}
+
+function closeWallpaper() { document.getElementById('wp-modal').classList.remove('show'); }
+
+function uploadWallpaperBg(event) {
   const file = event.target.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (e) => {
-    qrOptions.logo = e.target.result;
-    generateCard();
-    showToast('Logo eklendi!');
+    wpState.bgImg = e.target.result;
+    document.getElementById('wp-bg').src = e.target.result;
+    document.querySelectorAll('.wp-bg-preset').forEach(el => el.classList.remove('active'));
+    showToast('Arka plan yüklendi!');
   };
   reader.readAsDataURL(file);
 }
 
-function useDefaultLogo() {
-  // Prominall P logosu (SVG olarak data URL)
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
-  qrOptions.logo = 'data:image/svg+xml;base64,' + btoa(svg);
-  generateCard();
-  showToast('Prominall logosu eklendi!');
+function updateQRSize(val) {
+  wpState.qrSize = parseInt(val) / 100;
+  document.getElementById('wp-size-val').textContent = val;
+  const box = document.getElementById('wp-qr-box');
+  box.style.width = (wpState.qrSize * 100) + '%';
 }
 
-function removeLogo() {
-  qrOptions.logo = null;
-  generateCard();
-  showToast('Logo kaldirildi');
+function updateBgOpacity(val) {
+  wpState.bgOpacity = parseInt(val) / 100;
+  document.getElementById('wp-bg-op-val').textContent = val;
+  const box = document.getElementById('wp-qr-box');
+  box.style.background = 'rgba(255,255,255,' + wpState.bgOpacity + ')';
+}
+
+function setWpColor(color) {
+  wpState.qrColor = color;
+  document.getElementById('wp-qr-color').value = color;
+  updateWpQR();
+}
+
+function updateWpQR() {
+  wpState.qrColor = document.getElementById('wp-qr-color').value;
+  const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
+  const container = document.createElement('div');
+  new QRCode(container, { text: url, width: 400, height: 400, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+  setTimeout(() => {
+    const srcCanvas = container.querySelector('canvas');
+    if (!srcCanvas) return;
+    const preview = document.getElementById('wp-qr-canvas');
+    preview.width = 400; preview.height = 400;
+    const ctx = preview.getContext('2d');
+    ctx.clearRect(0,0,400,400);
+    ctx.drawImage(srcCanvas, 0, 0, 400, 400);
+    if (wpState.logo) {
+      const img = new Image();
+      img.onload = () => {
+        const ls = 400 * 0.22;
+        const pad = ls * 0.1;
+        const x = (400 - ls) / 2;
+        const y = (400 - ls) / 2;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(x - pad, y - pad, ls + pad*2, ls + pad*2);
+        ctx.drawImage(img, x, y, ls, ls);
+      };
+      img.src = wpState.logo;
+    }
+  }, 50);
+}
+
+function wpUseProminall() {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
+  wpState.logo = 'data:image/svg+xml;base64,' + btoa(svg);
+  updateWpQR();
+  showToast('Prominall logosu eklendi');
+}
+
+function wpRemoveLogo() { wpState.logo = null; updateWpQR(); showToast('Logo kaldırıldı'); }
+
+function setupQRDrag() {
+  const box = document.getElementById('wp-qr-box');
+  const screen = document.getElementById('wp-screen');
+  let dragging = false, offX = 0, offY = 0;
+  const start = (e) => {
+    e.preventDefault();
+    dragging = true;
+    const pt = e.touches ? e.touches[0] : e;
+    const rect = box.getBoundingClientRect();
+    offX = pt.clientX - rect.left;
+    offY = pt.clientY - rect.top;
+  };
+  const move = (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const pt = e.touches ? e.touches[0] : e;
+    const sr = screen.getBoundingClientRect();
+    let x = pt.clientX - sr.left - offX;
+    let y = pt.clientY - sr.top - offY;
+    const bw = box.offsetWidth;
+    const bh = box.offsetHeight;
+    x = Math.max(0, Math.min(sr.width - bw, x));
+    y = Math.max(0, Math.min(sr.height - bh, y));
+    wpState.qrX = x / sr.width;
+    wpState.qrY = y / sr.height;
+    box.style.left = (wpState.qrX * 100) + '%';
+    box.style.top = (wpState.qrY * 100) + '%';
+  };
+  const end = () => { dragging = false; };
+  box.onmousedown = start;
+  document.addEventListener('mousemove', move);
+  document.addEventListener('mouseup', end);
+  box.ontouchstart = start;
+  document.addEventListener('touchmove', move, {passive:false});
+  document.addEventListener('touchend', end);
+}
+
+function downloadWallpaper() {
+  if (!wpState.bgImg) { showToast('Önce bir arka plan seç', true); return; }
+  const W = 1170, H = 2532;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const bg = new Image();
+  bg.crossOrigin = 'anonymous';
+  bg.onload = () => {
+    const rBg = bg.width / bg.height;
+    const rC = W / H;
+    let sx = 0, sy = 0, sw = bg.width, sh = bg.height;
+    if (rBg > rC) { sw = bg.height * rC; sx = (bg.width - sw) / 2; }
+    else { sh = bg.width / rC; sy = (bg.height - sh) / 2; }
+    ctx.drawImage(bg, sx, sy, sw, sh, 0, 0, W, H);
+    const qrPx = Math.round(W * wpState.qrSize);
+    const qrContainer = document.createElement('div');
+    new QRCode(qrContainer, { text: window.location.origin + '/prm-cards/card.html?id=' + currentSlug, width: qrPx, height: qrPx, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    setTimeout(() => {
+      const qrCanvas = qrContainer.querySelector('canvas');
+      if (!qrCanvas) { showToast('QR oluşturulamadı', true); return; }
+      const pad = Math.round(qrPx * 0.06);
+      const boxW = qrPx + pad * 2;
+      const boxH = qrPx + pad * 2;
+      const px = Math.round(wpState.qrX * W);
+      const py = Math.round(wpState.qrY * H);
+      ctx.fillStyle = 'rgba(255,255,255,' + wpState.bgOpacity + ')';
+      roundRect(ctx, px, py, boxW, boxH, 24);
+      ctx.fill();
+      ctx.drawImage(qrCanvas, px + pad, py + pad, qrPx, qrPx);
+      const finish = () => {
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = 'Wallpaper_' + currentSlug + '_1170x2532.png';
+        a.click();
+        showToast('Wallpaper indirildi! 📱');
+      };
+      if (wpState.logo) {
+        const lg = new Image();
+        lg.onload = () => {
+          const ls = qrPx * 0.22;
+          const lpad = ls * 0.1;
+          const lx = px + pad + (qrPx - ls) / 2;
+          const ly = py + pad + (qrPx - ls) / 2;
+          ctx.fillStyle = '#FFFFFF';
+          ctx.fillRect(lx - lpad, ly - lpad, ls + lpad*2, ls + lpad*2);
+          ctx.drawImage(lg, lx, ly, ls, ls);
+          finish();
+        };
+        lg.src = wpState.logo;
+      } else { finish(); }
+    }, 100);
+  };
+  bg.src = wpState.bgImg;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
 
 async function saveCard() {
@@ -310,7 +570,8 @@ async function saveCard() {
 function enterEditMode(id) {
   const m = teamData.find(x => x.id === id);
   if (!m) return;
-  editMode = true; editingId = m.id;
+  editMode = true;
+  editingId = m.id;
   document.getElementById('f-name').value = m.name || '';
   document.getElementById('f-title').value = m.title || '';
   document.getElementById('f-company').value = m.company || 'Prominall GmbH';
@@ -425,9 +686,7 @@ async function loadTeam() {
       d.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div class="team-avatar-sm">' + getInitials(m.name) + '</div><div class="team-info"><div class="team-name">' + m.name + '</div><div class="team-role">' + (m.title || '') + '</div></div><div class="team-actions"><button class="mini-btn" title="Edit" onclick="enterEditMode(' + q + m.id + q + ')">' + EI + '</button><button class="mini-btn" title="Copy" onclick="copyUrl2(' + q + m.id + q + ')">' + CI + '</button><button class="mini-btn delete-btn" title="Delete" onclick="deleteMember(' + q + m.id + q + ')">' + DI + '</button></div></div>';
       grid.appendChild(d);
     });
-  } catch (e) {
-    grid.innerHTML = '<div style="color:#A33D2D;padding:1rem;">Connection error.</div>';
-  }
+  } catch (e) { grid.innerHTML = '<div style="color:#A33D2D;padding:1rem;">Connection error.</div>'; }
 }
 
 updateSlugPreview();
