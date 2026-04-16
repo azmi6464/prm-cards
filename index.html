@@ -1,128 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prominall — Card Admin</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    :root{--olive:#4A5C3E;--amber:#C37113;--cream:#F7F4E9;--forest:#2C3625;--gold:#6B7D5E;--light:#607D5E;--pale:#FDFCF7;--border:rgba(75,92,62,0.15)}
-    body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);min-height:100vh}
-    .topbar{background:var(--forest);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-    .logo-mark{width:30px;height:30px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:white}
-    .topbar-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream)}
-    .topbar-sub{font-size:11px;color:rgba(247,244,233,0.5);text-transform:uppercase;letter-spacing:0.08em}
-    .main{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 56px)}
-    .sidebar{background:var(--pale);border-right:1px solid var(--border);padding:2rem;overflow-y:auto}
-    .content{padding:2rem;overflow-y:auto}
-    .section-title{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);margin-bottom:1rem}
-    .form-group{margin-bottom:1rem}
-    label{display:block;font-size:12px;font-weight:500;color:var(--light);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px}
-    input[type=text],input[type=tel],input[type=email],input[type=url]{width:100%;padding:10px 14px;background:white;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--forest);outline:none;transition:border-color 0.15s}
-    input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
-    .divider{height:1px;background:var(--border);margin:1.5rem 0}
-    .id-preview{background:rgba(75,92,62,0.06);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-family:monospace;margin-top:5px;min-height:26px}
-    .btn-generate{display:flex;width:100%;padding:13px;background:rgba(75,92,62,0.1);color:var(--forest);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.25s;margin-top:0.5rem;align-items:center;justify-content:center}
-    .btn-generate:hover{background:var(--amber)}
-    .btn-save{width:100%;padding:13px;background:transparent;color:var(--olive);border:1px dashed var(--olive);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:0.75rem;transition:background 0.15s}
-    .btn-save:hover{background:rgba(75,92,62,0.06)}
-    .btn-save-update-mode{display:none;width:100%;padding:8px;background:transparent;border:1px solid rgba(195,113,19,0.3);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500}
-    .btn-cancel{width:100%;padding:8px;background:transparent;color:var(--light);border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:6px;display:none}
-    .edit-banner{width:100%;padding:8px 12px;background:rgba(195,113,19,0.3);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500;display:none}
-    .result-card{background:var(--pale);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
-    .result-header{display:grid;gap:14px;align-items:center;margin-bottom:1.5rem}
-    .result-avatar{width:52px;height:52px;border-radius:50%;background:rgba(195,113,19,0.2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--amber);flex-shrink:0}
-    .result-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest)}
-    .result-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px}
-    .result-body{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
-    .link-box{margin-bottom:1rem}
-    .link-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);margin-bottom:5px}
-    .link-url{display:flex;align-items:center;gap:8px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
-    .link-text{flex:1;font-size:12px;color:var(--light);word-break:break-all;font-family:monospace}
-    .link-copy{background:var(--cream);border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif}
-    .action-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    .action-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:1px solid var(--border);background:white;color:var(--forest);transition:background 0.15s}
-    .qr-area{display:flex;flex-direction:column;align-items:center;gap:10px}
-    .qr-area canvas,.qr-area img{width:140px;height:140px;display:block}
-    .qr-download{font-size:11px;color:var(--light);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:'DM Sans',sans-serif}
-    .team-section{margin-top:2rem}
-    .team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-radius:12px;padding:8px 10px;background:rgba(75,92,62,0.1)}
-    .team-count{font-size:11px;color:var(--light)}
-    .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
-    .team-card{background:var(--pale);border:1px solid var(--border);padding:12px 16px;border-radius:20px;transition:border-color 0.15s}
-    .team-card.active-edit{border-color:var(--amber);box-shadow:0 0 0 2px rgba(195,113,19,0.15)}
-    .team-avatar-sm{width:40px;height:40px;border-radius:50%;background:rgba(75,92,62,0.1);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--amber);flex-shrink:0}
-    .team-info{flex:1;min-width:0}
-    .team-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .team-role{font-size:11px;color:var(--light);text-transform:uppercase;letter-spacing:0.05em;margin-top:1px}
-    .team-actions{display:flex;gap:4px}
-    .mini-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .mini-btn svg{width:13px;height:13px}
-    .mini-btn.delete-btn:hover{background:#FFEAEA;border-color:#E2484A}
-    .mini-btn.delete-btn:hover svg{stroke:#E2484A}
-    .empty-state{text-align:center;padding:4rem 2rem;color:var(--light)}
-    .empty-state h3{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:0.5rem;color:var(--forest)}
-    .loading-team{text-align:center;padding:2rem;color:var(--light);font-size:13px}
-    .host-banner{background:rgba(195,113,19,0.08);border:1px solid rgba(195,113,19,0.25);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:13px;color:var(--forest);display:flex;align-items:flex-start;gap:10px}
-    .host-banner strong{color:var(--amber)}
-    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--forest);color:var(--cream);padding:10px 20px;border-radius:8px;font-size:13px;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:9999}
-    .toast.show{opacity:1}
-    .toast.error{background:#A3D2D0}
-    @media(max-width:900px){.main{grid-template-columns:1fr}.result-body{grid-template-columns:1fr}}
-    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  <\/style>
-<\/head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prominall — Card Admin</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--olive:#4A5C3E;--amber:#C37113;--cream:#F7F4E9;--forest:#2C3625;--light:#607D5E;--pale:#FDFCF7;--border:rgba(75,92,62,0.15)}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--forest);min-height:100vh}
+.topbar{background:var(--forest);padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo-mark{width:30px;height:30px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:white}
+.topbar-title{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--cream)}
+.topbar-sub{font-size:11px;color:rgba(247,244,233,0.5);text-transform:uppercase;letter-spacing:0.08em}
+.main{display:grid;grid-template-columns:400px 1fr;min-height:calc(100vh - 56px)}
+.sidebar{background:var(--pale);border-right:1px solid var(--border);padding:2rem;overflow-y:auto}
+.content{padding:2rem;overflow-y:auto}
+.section-title{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--light);margin-bottom:1rem}
+.form-group{margin-bottom:1rem}
+label{display:block;font-size:12px;font-weight:500;color:var(--light);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:5px}
+input[type=text],input[type=tel],input[type=email],input[type=url]{width:100%;padding:10px 14px;background:white;border:1px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--forest);outline:none;transition:border-color 0.15s}
+input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
+.divider{height:1px;background:var(--border);margin:1.5rem 0}
+.id-preview{background:rgba(75,92,62,0.06);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-family:monospace;margin-top:5px;min-height:26px}
+.btn-generate{display:flex;width:100%;padding:13px;background:rgba(75,92,62,0.1);color:var(--forest);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.25s;margin-top:0.5rem;align-items:center;justify-content:center}
+.btn-generate:hover{background:var(--amber);color:white}
+.btn-save{width:100%;padding:13px;background:transparent;color:var(--olive);border:1px dashed var(--olive);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:0.75rem;transition:background 0.15s}
+.btn-save-update-mode{display:none;width:100%;padding:8px;background:transparent;border:1px solid rgba(195,113,19,0.3);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500;cursor:pointer}
+.btn-cancel{width:100%;padding:8px;background:transparent;color:var(--light);border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:6px;display:none}
+.edit-banner{width:100%;padding:8px 12px;background:rgba(195,113,19,0.3);border-radius:8px;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500;display:none}
+.result-card{background:var(--pale);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
+.result-header{gap:14px;align-items:center;margin-bottom:1.5rem}
+.result-avatar{width:52px;height:52px;border-radius:50%;background:rgba(195,113,19,0.2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--amber);flex-shrink:0}
+.result-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest)}
+.result-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px}
+.result-body{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.link-box{margin-bottom:1rem}
+.link-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);margin-bottom:5px}
+.link-url{display:flex;align-items:center;gap:8px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+.link-text{flex:1;font-size:12px;color:var(--light);word-break:break-all;font-family:monospace}
+.link-copy{background:var(--cream);border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
+.action-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.action-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:1px solid var(--border);background:white;color:var(--forest);transition:background 0.15s}
+.qr-area{display:flex;flex-direction:column;align-items:center;gap:10px}
+.qr-area canvas,.qr-area img{width:140px;height:140px;display:block}
+.qr-download{font-size:11px;color:var(--light);cursor:pointer;text-decoration:underline;background:none;border:none}
+.team-section{margin-top:2rem}
+.team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-radius:12px;padding:8px 10px;background:rgba(75,92,62,0.1)}
+.team-count{font-size:11px;color:var(--light)}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.team-card{background:var(--pale);border:1px solid var(--border);padding:12px 16px;border-radius:20px;transition:border-color 0.15s}
+.team-card.active-edit{border-color:var(--amber);box-shadow:0 0 0 2px rgba(195,113,19,0.15)}
+.team-avatar-sm{width:40px;height:40px;border-radius:50%;background:rgba(75,92,62,0.1);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--amber);flex-shrink:0}
+.team-info{flex:1;min-width:0}
+.team-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-role{font-size:11px;color:var(--light);text-transform:uppercase;letter-spacing:0.05em;margin-top:1px}
+.team-actions{display:flex;gap:4px}
+.mini-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mini-btn svg{width:13px;height:13px}
+.mini-btn.delete-btn:hover{background:#FFEAEA;border-color:#E2484A}
+.mini-btn.delete-btn:hover svg{stroke:#E2484A}
+.empty-state{text-align:center;padding:4rem 2rem;color:var(--light)}
+.empty-state h3{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:0.5rem;color:var(--forest)}
+.loading-team{text-align:center;padding:2rem;color:var(--light);font-size:13px}
+.host-banner{background:rgba(195,113,19,0.08);border:1px solid rgba(195,113,19,0.25);border-radius:10px;padding:0.75rem 1rem;margin-bottom:1.5rem;font-size:13px;color:var(--forest);display:flex;align-items:flex-start;gap:10px}
+.host-banner strong{color:var(--amber)}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--forest);color:var(--cream);padding:10px 20px;border-radius:8px;font-size:13px;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:9999}
+.toast.show{opacity:1}
+.toast.error{background:#A3D2D0}
+@media(max-width:900px){.main{grid-template-columns:1fr}.result-body{grid-template-columns:1fr}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
 <body>
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="logo-mark">P<\/div>
-      <div><div class="topbar-title">Prominall Cards<\/div><\/div>
-    <\/div>
-    <div class="topbar-sub">Digital Business Card System<\/div>
-  <\/div>
-  <div class="main">
-    <aside class="sidebar">
-      <div class="section-title">Create / Edit Card<\/div>
-      <div class="edit-banner" id="edit-banner"><\/div>
-      <div class="form-group">
-        <label>Full Name *<\/label>
-        <input type="text" id="f-name" placeholder="e.g. Azmi Ciloglu" oninput="updateSlugPreview()">
-        <div class="id-preview" id="slug-preview">ID will appear here<\/div>
-      <\/div>
-      <div class="form-row">
-        <div class="form-group"><label>Job Title<\/label><input type="text" id="f-title" placeholder="Export Manager"><\/div>
-        <div class="form-group"><label>Company<\/label><input type="text" id="f-company" value="Prominall GmbH"><\/div>
-      <\/div>
-      <div class="divider"><\/div>
-      <div class="form-group"><label>Phone<\/label><input type="tel" id="f-phone" placeholder="+49 421 123 4567"><\/div>
-      <div class="form-group"><label>Email<\/label><input type="email" id="f-email" placeholder="name@prominall.com"><\/div>
-      <div class="form-group"><label>Website<\/label><input type="url" id="f-web" placeholder="prominall.com"><\/div>
-      <div class="form-group"><label>LinkedIn<\/label><input type="text" id="f-linkedin" placeholder="linkedin.com/in/username"><\/div>
-      <div class="form-group"><label>Location<\/label><input type="text" id="f-addr" placeholder="Bremen, Germany"><\/div>
-      <div class="form-group"><label>Photo URL (optional)<\/label><input type="url" id="f-photo" placeholder="https://..."><\/div>
-      <button class="btn-generate" id="btn-generate" onclick="generateCard()">Generate Card<\/button>
-      <button class="btn-save" id="btn-save" onclick="saveCard()">+ Save to Database<\/button>
-      <button class="btn-save-update-mode" id="btn-update" onclick="saveCard()">Update Card<\/button>
-      <button class="btn-cancel" id="btn-cancel" onclick="cancelEdit()">Cancel editing<\/button>
-    <\/aside>
-    <section class="content">
-      <div class="host-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"><\/circle><line x1="12" y1="8" x2="12" y2="12"><\/line><line x1="12" y1="16" x2="12.01" y2="16"><\/line><\/svg>
-        <span>Cards stored on <strong><a href="https://firebase.google.com" target="_blank" style="color:var(--amber)">Firebase Realtime Database<\/a><\/strong>. QR codes use a <strong>permanent ID<\/strong>.<\/span>
-      <\/div>
-      <div id="result-area"><\/div>
-      <div class="team-section">
-        <div class="team-header">
-          <div class="section-title" style="margin:0">Team Members<\/div>
-          <div class="team-count" id="team-count"><\/div>
-        <\/div>
-        <div class="team-grid" id="team-grid"><div class="loading-team">Loading...<\/div><\/div>
-      <\/div>
-    <\/section>
-  <\/div>
-  <div class="toast" id="toast"><\/div>
-  <script src="cards.js"><\/script>
-<\/body>
-<\/html>
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo-mark">P</div>
+    <div><div class="topbar-title">Prominall Cards</div></div>
+  </div>
+  <div class="topbar-sub">Digital Business Card System</div>
+</div>
+<div class="main">
+  <aside class="sidebar">
+    <div class="section-title">Create / Edit Card</div>
+    <div class="edit-banner" id="edit-banner"></div>
+    <div class="form-group">
+      <label>Full Name *</label>
+      <input type="text" id="f-name" placeholder="e.g. Azmi Ciloglu" oninput="updateSlugPreview()">
+      <div class="id-preview" id="slug-preview">ID will appear here</div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Job Title</label><input type="text" id="f-title" placeholder="Export Manager"></div>
+      <div class="form-group"><label>Company</label><input type="text" id="f-company" value="Prominall GmbH"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-group"><label>Phone</label><input type="tel" id="f-phone" placeholder="+49 421 123 4567"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="f-email" placeholder="name@prominall.com"></div>
+    <div class="form-group"><label>Website</label><input type="url" id="f-web" placeholder="prominall.com"></div>
+    <div class="form-group"><label>LinkedIn</label><input type="text" id="f-linkedin" placeholder="linkedin.com/in/username"></div>
+    <div class="form-group"><label>Location</label><input type="text" id="f-addr" placeholder="Bremen, Germany"></div>
+    <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="f-photo" placeholder="https://..."></div>
+    <button class="btn-generate" id="btn-generate" onclick="generateCard()">Generate Card</button>
+    <button class="btn-save" id="btn-save" onclick="saveCard()">+ Save to Database</button>
+    <button class="btn-save-update-mode" id="btn-update" onclick="saveCard()">Update Card</button>
+    <button class="btn-cancel" id="btn-cancel" onclick="cancelEdit()">Cancel editing</button>
+  </aside>
+  <section class="content">
+    <div class="host-banner">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Cards stored on <strong><a href="https://firebase.google.com" target="_blank" style="color:var(--amber)">Firebase Realtime Database</a></strong>. QR codes use a <strong>permanent ID</strong>.</span>
+    </div>
+    <div id="result-area"></div>
+    <div class="team-section">
+      <div class="team-header">
+        <div class="section-title" style="margin:0">Team Members</div>
+        <div class="team-count" id="team-count"></div>
+      </div>
+      <div class="team-grid" id="team-grid"><div class="loading-team">Loading...</div></div>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const FIREBASE_URL = 'https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
+let currentSlug = '', editMode = false, editingId = '', teamData = [];
+const EI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
+const CI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+const DI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>';
+const apiGet=async()=>{const r=await fetch(FIREBASE_URL+'/cards.json');if(!r.ok)return[];const d=await r.json();if(!d)return[];return Object.values(d).filter(Boolean)};
+const apiSave=async(data)=>{const r=await fetch(FIREBASE_URL+'/cards/'+data.id+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});return r.ok};
+const apiDelete=async(id)=>{const r=await fetch(FIREBASE_URL+'/cards/'+id+'.json',{method:'DELETE'});return r.ok};
+function toSlug(n){return n.toLowerCase().replace(/ü/g,'u').replace(/ö/g,'o').replace(/ä/g,'a').replace(/ß/g,'ss').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ş/g,'s').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function updateSlugPreview(){const n=document.getElementById('f-name').value.trim();const s=n?toSlug(n):'';document.getElementById('slug-preview').textContent=s?'card.html?id='+s:'ID will appear here'}
+function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
+function getFormData(){return{name:document.getElementById('f-name').value.trim(),title:document.getElementById('f-title').value.trim(),company:document.getElementById('f-company').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),web:document.getElementById('f-web').value.trim(),linkedin:document.getElementById('f-linkedin').value.trim(),addr:document.getElementById('f-addr').value.trim(),photo:document.getElementById('f-photo').value.trim()}}
+function generateCard(){const data=getFormData();if(!data.name){showToast('Please enter a name',true);return}const slug=editMode?editingId:toSlug(data.name);currentSlug=slug;const url=window.location.origin+'/prm-cards/card.html?id='+slug;document.getElementById('slug-preview').textContent=editMode?'Editing: '+slug:'card.html?id='+slug;const ra=document.getElementById('result-area');ra.innerHTML='<div class="result-card"><div class="result-header"><div style="display:flex;align-items:center;gap:12px"><div class="result-avatar">'+getInitials(data.name)+'</div><div><div class="result-name">'+data.name+'</div><div class="result-title">'+(data.title||'')+'</div></div></div></div><div class="result-body"><div><div class="link-box"><div class="link-label">Permanent Card URL</div><div class="link-url"><span class="link-text">'+url+'</span><button class="link-copy" onclick="copyUrl()">Copy</button></div></div><div class="link-box"><div class="link-label">Card ID</div><div class="link-url"><span class="link-text" style="font-family:monospace">'+slug+'</span><button class="link-copy" onclick="copySlug()">Copy</button></div></div><div class="action-row"><a href="'+url+'" target="_blank" class="action-btn">Open Card</a><button class="action-btn" onclick="downloadQR()">Download QR</button><button class="action-btn" onclick="printQR()">Print QR</button></div></div><div class="qr-area"><div id="qr-display"></div><button class="qr-download" onclick="downloadQR()">Download PNG</button></div></div></div>';if(window.QRCode){const el=document.getElementById('qr-display');el.innerHTML='';new QRCode(el,{text:url,width:140,height:140})}}
+async function saveCard(){const data=getFormData();if(!data.name){showToast('Please enter a name',true);return}const slug=editMode?editingId:toSlug(data.name);data.id=slug;data.updatedAt=new Date().toISOString();const ok=await apiSave(data);if(ok){showToast(editMode?'Card updated!':'Card saved!');if(!editMode)cancelEdit();loadTeam()}else showToast('Save failed',true)}
+function enterEditMode(id){const m=teamData.find(x=>x.id===id);if(!m)return;editMode=true;editingId=m.id;document.getElementById('f-name').value=m.name||'';document.getElementById('f-title').value=m.title||'';document.getElementById('f-company').value=m.company||'Prominall GmbH';document.getElementById('f-phone').value=m.phone||'';document.getElementById('f-email').value=m.email||'';document.getElementById('f-web').value=m.web||'';document.getElementById('f-linkedin').value=m.linkedin||'';document.getElementById('f-addr').value=m.addr||'';document.getElementById('f-photo').value=m.photo||'';document.getElementById('edit-banner').style.display='block';document.getElementById('edit-banner').textContent='Editing: '+m.name;document.getElementById('btn-cancel').style.display='block';document.getElementById('btn-update').style.display='block';document.getElementById('btn-save').style.display='none';document.getElementById('slug-preview').textContent='Editing: '+m.id;document.querySelector('.sidebar').scrollTop=0}
+function cancelEdit(){editMode=false;editingId='';['f-name','f-title','f-phone','f-email','f-web','f-linkedin','f-addr','f-photo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-company').value='Prominall GmbH';document.getElementById('edit-banner').style.display='none';document.getElementById('btn-cancel').style.display='none';document.getElementById('btn-update').style.display='none';document.getElementById('btn-save').style.display='block';document.getElementById('result-area').innerHTML='';updateSlugPreview()}
+async function deleteMember(id){if(!confirm('Delete this card?'))return;const ok=await apiDelete(id);if(ok){showToast('Card deleted');if(editingId===id)cancelEdit();loadTeam()}else showToast('Delete failed',true)}
+function copyUrl(){if(currentSlug)navigator.clipboard.writeText(window.location.origin+'/prm-cards/card.html?id='+currentSlug).then(()=>showToast('URL copied!'))}
+function copySlug(){if(currentSlug)navigator.clipboard.writeText(currentSlug).then(()=>showToast('Slug copied!'))}
+function copyUrl2(id){navigator.clipboard.writeText(window.location.origin+'/prm-cards/card.html?id='+id).then(()=>showToast('URL copied!'))}
+function downloadQR(){const c=document.querySelector('#qr-display canvas');if(!c){showToast('Generate a card first',true);return}const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='QR_'+currentSlug+'.png';a.click()}
+function printQR(){const c=document.querySelector('#qr-display canvas');if(!c){showToast('Generate a card first',true);return}const w=window.open('','','width=400,height=500');w.document.write('<html><body style="text-align:center;padding:2rem"><img src="'+c.toDataURL()+'"></body></html>');w.print()}
+let toastTimer;
+function showToast(msg,isError=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isError?' error':'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500)}
+async function loadTeam(){const grid=document.getElementById('team-grid');grid.innerHTML='<div class="loading-team">Loading...</div>';try{teamData=await apiGet();if(!teamData.length){grid.innerHTML='<div class="empty-state"><h3>No cards yet</h3><p>Create your first card using the form.</p></div>';document.getElementById('team-count').textContent='';return}document.getElementById('team-count').textContent=teamData.length+' member'+(teamData.length!==1?'s':'');grid.innerHTML='';teamData.forEach(m=>{const d=document.createElement('div');d.className='team-card'+(editingId===m.id?' active-edit':'');const q="'";d.innerHTML='<div style="display:flex;align-items:center;gap:12px"><div class="team-avatar-sm">'+getInitials(m.name)+'</div><div class="team-info"><div class="team-name">'+m.name+'</div><div class="team-role">'+(m.title||'')+'</div></div><div class="team-actions"><button class="mini-btn" title="Edit" onclick="enterEditMode('+q+m.id+q+')">'+EI+'</button><button class="mini-btn" title="Copy" onclick="copyUrl2('+q+m.id+q+')">'+CI+'</button><button class="mini-btn delete-btn" title="Delete" onclick="deleteMember('+q+m.id+q+')">'+DI+'</button></div></div>';grid.appendChild(d)})}catch(e){grid.innerHTML='<div style="color:#A33D2D;padding:1rem;">Connection error.</div>'}}
+updateSlugPreview();loadTeam();
+</script>
+</body>
+</html>
