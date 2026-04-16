@@ -733,7 +733,7 @@ function generateCard() {
   if (!data.name) { showToast('Please enter a name', true); return; }
 
   const slug    = editMode ? editingId : toSlug(data.name);
-  const cardUrl = window.location.origin + '/card.html?id=' + slug;
+  const cardUrl = window.location.origin + '/prm-cards/card.html?id=' + slug;
   currentSlug   = slug;
 
   document.getElementById('res-name').textContent  = data.name;
@@ -873,7 +873,7 @@ async function loadTeam() {
         <button class="mini-btn" title="Edit" onclick='enterEditMode(${JSON.stringify(m)})'>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
         </button>
-        <button class="mini-btn" title="Copy URL" onclick="navigator.clipboard.writeText('${window.location.origin}/card.html?id=${m.id}').then(()=>showToast('URL copied!'))">
+        <button class="mini-btn" title="Copy URL" onclick="navigator.clipboard.writeText('${window.location.origin}/prm-cards/card.html?id=${m.id}').then(()=>showToast('URL copied!'))">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         </button>
         <button class="mini-btn delete-btn" title="Delete" onclick="deleteMember('${m.id}')">
@@ -885,7 +885,7 @@ async function loadTeam() {
 }
 
 // ── QR helpers ────────────────────────────────────────────────
-function copyUrl()  { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
+function copyUrl()  { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/prm-cards/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
 function copySlug() { if (currentSlug) navigator.clipboard.writeText(currentSlug).then(() => showToast('Slug copied!')); }
 
 function downloadQR() {
@@ -914,7 +914,7 @@ function printQR() {
   .url{margin-top:6px;font-size:10px;color:#aaa;font-family:monospace;}</style></head>
   <body><img src="${img}"><h2>${name}</h2><p>${title}</p>
   <div class="brand">Prominall · Natural Pet Chews</div>
-  <div class="url">${window.location.origin}/card.html?id=${currentSlug}</div>
+  <div class="url">${window.location.origin}/prm-cards/card.html?id=${currentSlug}</div>
   <script>window.onload=()=>{window.print();}<\/script></body></html>`);
   win.document.close();
 }
