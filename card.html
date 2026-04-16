@@ -1,483 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex">
-<title>Prominall — Digital Business Card</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --olive: #4B5C3E;
-    --amber: #C37113;
-    --cream: #F7F4E9;
-    --forest: #2C3625;
-    --gold: #8B7D3A;
-    --light-olive: #6B7D5E;
-    --pale: #FDFCF7;
-  }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
-  }
-
-  .card-wrap { width: 100%; max-width: 420px; }
-
-  .card {
-    background: var(--pale);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 40px rgba(44,54,37,0.15);
-    border: 1px solid rgba(139,125,58,0.2);
-  }
-
-  .card-header {
-    background: var(--forest);
-    padding: 2rem 2rem 1.5rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card-header::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 120px; height: 120px;
-    border-radius: 50%;
-    background: rgba(195,113,19,0.15);
-  }
-
-  .card-header::after {
-    content: '';
-    position: absolute;
-    bottom: -20px; left: 30px;
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: rgba(139,125,58,0.1);
-  }
-
-  .company-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 1.5rem;
-    position: relative; z-index: 1;
-  }
-
-  .logo-mark {
-    width: 36px; height: 36px;
-    background: var(--amber);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 18px; font-weight: 600; color: white;
-    flex-shrink: 0;
-  }
-
-  .company-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: rgba(247,244,233,0.8);
-    letter-spacing: 0.04em;
-  }
-
-  .avatar-initials {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 3px solid var(--amber);
-    background: rgba(195,113,19,0.2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px; font-weight: 600;
-    color: var(--amber);
-    margin-bottom: 1rem;
-    position: relative; z-index: 1;
-  }
-
-  .avatar-img {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 3px solid var(--amber);
-    object-fit: cover;
-    margin-bottom: 1rem;
-    position: relative; z-index: 1;
-    display: block;
-  }
-
-  .person-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; font-weight: 600;
-    color: var(--cream);
-    line-height: 1.2;
-    position: relative; z-index: 1;
-  }
-
-  .person-title {
-    font-size: 13px; font-weight: 400;
-    color: var(--amber);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 4px;
-    position: relative; z-index: 1;
-  }
-
-  .card-body { padding: 1.5rem 2rem; }
-
-  .contact-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-
-  .contact-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 10px 12px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: background 0.15s;
-    color: var(--forest);
-  }
-
-  .contact-item:hover { background: rgba(75,92,62,0.06); }
-
-  .contact-icon {
-    width: 36px; height: 36px;
-    border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .icon-phone { background: rgba(75,92,62,0.1); }
-  .icon-email { background: rgba(195,113,19,0.1); }
-  .icon-web   { background: rgba(44,54,37,0.08); }
-  .icon-loc   { background: rgba(139,125,58,0.1); }
-  .icon-li    { background: rgba(75,92,62,0.1); }
-
-  .contact-icon svg { width: 18px; height: 18px; }
-
-  .contact-text { flex: 1; }
-
-  .contact-label {
-    font-size: 10px; font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--light-olive);
-    margin-bottom: 1px;
-  }
-
-  .contact-value { font-size: 14px; font-weight: 400; color: var(--forest); }
-
-  .divider { height: 1px; background: rgba(75,92,62,0.1); margin: 1rem 0; }
-
-  .save-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    padding: 14px;
-    background: var(--forest);
-    color: var(--cream);
-    border: none;
-    border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    text-decoration: none;
-    margin-top: 0.5rem;
-  }
-
-  .save-btn:hover { background: #1a2016; }
-  .save-btn:active { transform: scale(0.98); }
-  .save-btn svg { width: 18px; height: 18px; }
-
-  .share-section {
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    background: rgba(75,92,62,0.05);
-    border-radius: 14px;
-    border: 1px solid rgba(75,92,62,0.1);
-    text-align: center;
-  }
-
-  .share-label {
-    font-size: 11px; font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--light-olive);
-    margin-bottom: 1rem;
-  }
-
-  #qr-code { display: flex; justify-content: center; margin-bottom: 0.75rem; }
-  #qr-code canvas, #qr-code img { border-radius: 8px; }
-
-  .qr-caption { font-size: 12px; color: var(--light-olive); }
-
-  .card-footer {
-    padding: 1rem 2rem;
-    border-top: 1px solid rgba(75,92,62,0.08);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .footer-brand {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px; color: var(--light-olive); letter-spacing: 0.04em;
-  }
-
-  .footer-cert { font-size: 10px; color: var(--gold); letter-spacing: 0.06em; text-align: right; }
-
-  .loading {
-    text-align: center;
-    padding: 3rem;
-    color: var(--light-olive);
-    font-size: 14px;
-  }
-
-  .loading-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--amber);
-    animation: pulse 1.2s ease-in-out infinite;
-    margin: 0 3px;
-  }
-
-  .loading-dot:nth-child(2) { animation-delay: 0.2s; }
-  .loading-dot:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes pulse { 0%,80%,100%{opacity:0.3;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
-
-  .not-found {
-    text-align: center;
-    color: var(--forest);
-    padding: 3rem 2rem;
-  }
-
-  .not-found h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; margin-bottom: 0.5rem;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    body { background: #1a1f17; }
-    .card { background: #22281e; border-color: rgba(139,125,58,0.25); }
-    .card-body { background: #22281e; }
-    .person-name, .contact-value { color: var(--cream); }
-    .contact-item { color: var(--cream); }
-    .contact-item:hover { background: rgba(247,244,233,0.05); }
-    .share-section { background: rgba(247,244,233,0.03); border-color: rgba(247,244,233,0.08); }
-    .card-footer { border-color: rgba(247,244,233,0.08); }
-    .not-found { color: var(--cream); }
-  }
-</style>
-</head>
-<body>
-
-<div class="card-wrap" id="card-container">
-  <div id="loading-state" class="loading">
-    <span class="loading-dot"></span>
-    <span class="loading-dot"></span>
-    <span class="loading-dot"></span>
-  </div>
-
-  <div class="card" id="main-card" style="display:none;">
-    <div class="card-header">
-      <div class="company-logo">
-        <div class="logo-mark">P</div>
-        <span class="company-name" id="hdr-company">Prominall GmbH</span>
-      </div>
-      <div id="avatar-area"></div>
-      <div class="person-name" id="hdr-name"></div>
-      <div class="person-title" id="hdr-title"></div>
-    </div>
-
-    <div class="card-body">
-      <ul class="contact-list" id="contact-list"></ul>
-      <div class="divider"></div>
-      <a class="save-btn" id="save-btn" href="#" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
-          <polyline points="17 21 17 13 7 13 7 21"/>
-          <polyline points="7 3 7 8 15 8"/>
-        </svg>
-        Save Contact
-      </a>
-      <div class="share-section">
-        <div class="share-label">Scan to Share</div>
-        <div id="qr-code"></div>
-        <div class="qr-caption">Scan with any camera app</div>
-      </div>
-    </div>
-
-    <div class="card-footer">
-      <span class="footer-brand">prominall.com</span>
-      <span class="footer-cert">GMP+ · ISO 22000 · HACCP</span>
-    </div>
-  </div>
-
-  <div id="not-found" style="display:none;" class="not-found">
-    <div class="logo-mark" style="margin:0 auto 1rem;width:48px;height:48px;font-size:22px;">P</div>
-    <h2>Card not found</h2>
-    <p style="font-size:14px;color:#6B7D5E;">This link may be invalid. Please contact the person directly.</p>
-  </div>
-</div>
-
-<script>
-const p = new URLSearchParams(window.location.search);
-const slugId = p.get('id');
-
-async function init() {
-  let data = null;
-
-  if (slugId) {
-    // Fetch from Firebase Realtime Database REST API
-    try {
-      const fbUrl = localStorage.getItem('prominall_firebase_url') || '';
-      if (fbUrl) {
-        const res = await fetch(`${fbUrl}/cards/${encodeURIComponent(slugId)}.json`);
-        if (res.ok) {
-          const json = await res.json();
-          if (json && json.name) data = json;
-        }
-      }
-    } catch(e) {}
-
-    if (!data) {
-      document.getElementById('loading-state').style.display = 'none';
-      document.getElementById('not-found').style.display = 'block';
-      return;
-    }
-  } else if (p.get('n')) {
-    // LEGACY FORMAT: use URL params directly
-    data = {
-      name:    p.get('n') || '',
-      title:   p.get('t') || '',
-      company: p.get('c') || 'Prominall GmbH',
-      phone:   p.get('p') || '',
-      email:   p.get('e') || '',
-      web:     p.get('w') || 'prominall.com',
-      linkedin:p.get('li') || '',
-      addr:    p.get('a') || '',
-      photo:   p.get('img') || '',
-    };
-  } else {
-    document.getElementById('loading-state').style.display = 'none';
-    document.getElementById('not-found').style.display = 'block';
-    return;
-  }
-
-  renderCard(data);
-}
-
-function renderCard(data) {
-  document.getElementById('loading-state').style.display = 'none';
-  document.getElementById('main-card').style.display = 'block';
-  document.title = data.name + ' — ' + (data.company || 'Prominall');
-
-  document.getElementById('hdr-name').textContent    = data.name;
-  document.getElementById('hdr-title').textContent   = data.title || '';
-  document.getElementById('hdr-company').textContent = data.company || 'Prominall GmbH';
-
-  // Avatar
-  const avatarArea = document.getElementById('avatar-area');
-  if (data.photo) {
-    const img = document.createElement('img');
-    img.className = 'avatar-img';
-    img.src = data.photo;
-    img.alt = data.name;
-    img.onerror = () => { img.style.display = 'none'; showInitials(); };
-    avatarArea.appendChild(img);
-  } else {
-    showInitials();
-  }
-
-  function showInitials() {
-    const div = document.createElement('div');
-    div.className = 'avatar-initials';
-    div.textContent = data.name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
-    avatarArea.appendChild(div);
-  }
-
-  // Contact list
-  const list = document.getElementById('contact-list');
-
-  const SVGs = {
-    phone: `<svg viewBox="0 0 24 24" fill="none" stroke="#4B5C3E" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`,
-    email: `<svg viewBox="0 0 24 24" fill="none" stroke="#C37113" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
-    web:   `<svg viewBox="0 0 24 24" fill="none" stroke="#2C3625" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`,
-    loc:   `<svg viewBox="0 0 24 24" fill="none" stroke="#8B7D3A" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
-    li:    `<svg viewBox="0 0 24 24" fill="none" stroke="#4B5C3E" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`
-  };
-
-  const items = [];
-  if (data.phone)    items.push({ icon: SVGs.phone, cls: 'icon-phone', label: 'Phone',    value: data.phone,   href: 'tel:' + data.phone.replace(/\s/g,'') });
-  if (data.email)    items.push({ icon: SVGs.email, cls: 'icon-email', label: 'Email',    value: data.email,   href: 'mailto:' + data.email });
-  if (data.web)      items.push({ icon: SVGs.web,   cls: 'icon-web',   label: 'Website',  value: data.web,     href: 'https://' + data.web.replace(/^https?:\/\//,'') });
-  if (data.addr)     items.push({ icon: SVGs.loc,   cls: 'icon-loc',   label: 'Location', value: data.addr,    href: 'https://maps.google.com?q=' + encodeURIComponent(data.addr) });
-  if (data.linkedin) items.push({ icon: SVGs.li,    cls: 'icon-li',    label: 'LinkedIn', value: 'View Profile', href: data.linkedin.startsWith('http') ? data.linkedin : 'https://linkedin.com/in/' + data.linkedin });
-
-  items.forEach(item => {
-    const li = document.createElement('li');
-    li.innerHTML = `<a class="contact-item" href="${item.href}" target="_blank" rel="noopener">
-      <div class="contact-icon ${item.cls}">${item.icon}</div>
-      <div class="contact-text">
-        <div class="contact-label">${item.label}</div>
-        <div class="contact-value">${item.value}</div>
-      </div></a>`;
-    list.appendChild(li);
-  });
-
-  // vCard
-  const nameParts = data.name.trim().split(' ');
-  const lastName  = nameParts.length > 1 ? nameParts[nameParts.length-1] : '';
-  const firstName = nameParts.slice(0, nameParts.length > 1 ? -1 : 1).join(' ');
-  const vcf = [
-    'BEGIN:VCARD', 'VERSION:3.0',
-    `FN:${data.name}`,
-    `N:${lastName};${firstName};;;`,
-    data.title   ? `TITLE:${data.title}`          : '',
-    data.company ? `ORG:${data.company}`           : '',
-    data.phone   ? `TEL;TYPE=WORK,VOICE:${data.phone}` : '',
-    data.email   ? `EMAIL;TYPE=WORK:${data.email}` : '',
-    data.web     ? `URL:https://${data.web.replace(/^https?:\/\//,'')}` : '',
-    data.addr    ? `ADR;TYPE=WORK:;;${data.addr};;;;` : '',
-    data.linkedin? `URL;TYPE=LinkedIn:${data.linkedin.startsWith('http') ? data.linkedin : 'https://linkedin.com/in/'+data.linkedin}` : '',
-    'END:VCARD'
-  ].filter(Boolean).join('\r\n');
-
-  const blob = new Blob([vcf], { type: 'text/vcard' });
-  const btn  = document.getElementById('save-btn');
-  btn.href     = URL.createObjectURL(blob);
-  btn.download = data.name.replace(/\s+/g,'_') + '.vcf';
-
-  // QR — use permanent ID-based URL if available, otherwise current URL
-  const qrUrl = slugId
-    ? window.location.origin + '/card.html?id=' + slugId
-    : window.location.href;
-
-  new QRCode(document.getElementById('qr-code'), {
-    text: qrUrl,
-    width: 140, height: 140,
-    colorDark: '#2C3625',
-    colorLight: '#FDFCF7',
-    correctLevel: QRCode.CorrectLevel.M
-  });
-}
-
-init();
-</script>
-</body>
-</html>
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="robots" content="noindex">
+      <title>Prominall — Digital Business Card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+          @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+          *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+          :root {
+                  --olive: #4B5C3E; --amber: #C37113; --cream: #F7F4E9;
+                  --forest: #2C3625; --gold: #8B7D3A; --light-olive: #6B7D5E; --pale: #FDFCF7;
+          }
+          body { font-family: 'DM Sans', sans-serif; background: var(--cream); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 1rem; }
+          .card-wrap { width: 100%; max-width: 420px; }
+          .card { background: var(--pale); border-radius: 20px; overflow: hidden; box-shadow: 0 8px 40px rgba(44,54,37,0.15); border: 1px solid rgba(139,125,58,0.2); }
+          .card-header { background: var(--forest); padding: 2rem 2rem 1.5rem; position: relative; overflow: hidden; }
+          .card-header::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(195,113,19,0.15); }
+          .card-header::after { content: ''; position: absolute; bottom: -20px; left: 30px; width: 80px; height: 80px; border-radius: 50%; background: rgba(139,125,58,0.1); }
+          .company-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+          .logo-mark { width: 36px; height: 36px; background: var(--amber); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: white; flex-shrink: 0; }
+          .company-name { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 500; color: rgba(247,244,233,0.8); letter-spacing: 0.04em; }
+          .avatar-initials { width: 72px; height: 72px; border-radius: 50%; border: 3px solid var(--amber); background: rgba(195,113,19,0.2); display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--amber); margin-bottom: 1rem; position: relative; z-index: 1; }
+          .avatar-img { width: 72px; height: 72px; border-radius: 50%; border: 3px solid var(--amber); object-fit: cover; margin-bottom: 1rem; position: relative; z-index: 1; display: block; }
+          .person-name { font-family: 'Cormorant Garamond', serif; font-size: 28px; font-weight: 600; color: var(--cream); line-height: 1.2; position: relative; z-index: 1; }
+          .person-title { font-size: 13px; font-weight: 400; color: var(--amber); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; position: relative; z-index: 1; }
+          .card-body { padding: 1.5rem 2rem; }
+          .contact-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+          .contact-item { display: flex; align-items: center; gap: 14px; padding: 10px 12px; border-radius: 10px; text-decoration: none; transition: background 0.15s; color: var(--forest); }
+          .contact-item:hover { background: rgba(75,92,62,0.06); }
+          .contact-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+          .icon-phone { background: rgba(75,92,62,0.1); } .icon-email { background: rgba(195,113,19,0.1); }
+          .icon-web { background: rgba(44,54,37,0.08); } .icon-loc { background: rgba(139,125,58,0.1); } .icon-li { background: rgba(75,92,62,0.1); }
+          .contact-icon svg { width: 18px; height: 18px; }
+          .contact-text { flex: 1; }
+          .contact-label { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--light-olive); margin-bottom: 1px; }
+          .contact-value { font-size: 14px; font-weight: 400; color: var(--forest); }
+          .divider { height: 1px; background: rgba(75,92,62,0.1); margin: 1rem 0; }
+          .save-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: var(--forest); color: var(--cream); border: none; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.1s; text-decoration: none; margin-top: 0.5rem; }
+          .save-btn:hover { background: #1a2016; }
+          .save-btn:active { transform: scale(0.98); }
+          .save-btn svg { width: 18px; height: 18px; }
+          .share-section { margin-top: 1.5rem; padding: 1.5rem; background: rgba(75,92,62,0.05); border-radius: 14px; border: 1px solid rgba(75,92,62,0.1); text-align: center; }
+          .share-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--light-olive); margin-bottom: 1rem; }
+          #qr-code { display: flex; justify-content: center; margin-bottom: 0.75rem; }
+          #qr-code canvas, #qr-code img { border-radius: 8px; }
+          .qr-caption { font-size: 12px; color: var(--light-olive); }
+          .card-footer { padding: 1rem 2rem; border-top: 1px solid rgba(75,92,62,0.08); display: flex; align-items: center; justify-content: space-between; }
+          .footer-brand { font-family: 'Cormorant Garamond', serif; font-size: 12px; color: var(--light-olive); letter-spacing: 0.04em; }
+          .footer-cert { font-size: 10px; color: var(--gold); letter-spacing: 0.06em; text-align: right; }
+          .loading { text-align: center; padding: 3rem; color: var(--light-olive); font-size: 14px; }
+          .loading-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: pulse 1.2s ease-in-out infinite; margin: 0 3px; }
+          .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+          .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+          @keyframes pulse { 0%,80%,100%{opacity:0.3;transform:scale(0.8)} 40%{opacity:1;transform:scale(1)} }
+          .not-found { text-align: center; color: var(--forest); padding: 3rem 2rem; }
+          .not-found h2 { font-family: 'Cormorant Garamond', serif; font-size: 28px; margin-bottom: 0.5rem; }
+          @media (prefers-color-scheme: dark) {
+                  body { background: #1a1f17; }
+                  .card { background: #22281e; border-color: rgba(139,125,58,0.25); }
+                  .card-body { background: #22281e; }
+                  .person-name, .contact-value { color: var(--cream); }
+                  .contact-item { color: var(--cream); }
+                  .contact-item:hover { background: rgba(247,244,233,0.05); }
+                  .share-section { background: rgba(247,244,233,0.03); border-color: rgba(247,244,233,0.08); }
+                  .card-footer { border-color: rgba(247,244,233,0.08); }
+                  .not-found { color: var(--cream); }
+          }
+        </style>
+  </head>
+  <body>
+      <div class="card-wrap" id="card-container">
+            <div id="loading-state" class="loading">
+                    <span class="loading-dot"></span>span>
+                    <span class="loading-dot"></span>span>
+                    <span class="loading-dot"></span>span>
+            </div>div>
+            <div class="card" id="main-card" style="display:none;">
+                    <div class="card-header">
+                              <div class="company-logo">
+                                          <div class="logo-mark">P</div>div>
+                                          <span class="company-name" id="hdr-company">Prominall GmbH</span>span>
+                              </div>div>
+                              <div id="avatar-area"></div>div>
+                              <div class="person-name" id="hdr-name"></div>div>
+                              <div class="person-title" id="hdr-title"></div>div>
+                    </div>div>
+                    <div class="card-body">
+                              <ul class="contact-list" id="contact-list"></ul>ul>
+                              <div class="divider"></div>div>
+                              <a class="save-btn" id="save-btn" href="#" download>
+                                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                                                        <polyline points="17 21 17 13 7 13 7 21"/>
+                                                        <polyline points="7 3 7 8 15 8"/>
+                                          </svg>svg>
+                                          Save Contact
+                              </a>a>
+                              <div class="share-section">
+                                          <div class="share-label">Scan to Share</div>div>
+                                          <div id="qr-code"></div>div>
+                                          <div class="qr-caption">Scan with any camera app</div>div>
+                              </div>div>
+                    </div>div>
+                    <div class="card-footer">
+                              <span class="footer-brand">prominall.com</span>span>
+                              <span class="footer-cert">GMP+ · ISO 22000 · HACCP</span>span>
+                    </div>div>
+            </div>div>
+            <div id="not-found" style="display:none;" class="not-found">
+                    <div class="logo-mark" style="margin:0 auto 1rem;width:48px;height:48px;font-size:22px;">P</div>div>
+                    <h2>Card not found</h2>
+                  <p style="font-size:14px;color:#6B7D5E;">This link may be invalid. Please contact the person directly.</p>p>
+            </div>div>
+      </div>div>
+    <script>
+          // Firebase URL hardcoded - works on all devices
+          const FIREBASE_URL = 'https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
+
+          const p = new URLSearchParams(window.location.search);
+          const slugId = p.get('id');
+
+          async function init() {
+                  let data = null;
+                  if (slugId) {
+                            try {
+                                        const res = await fetch(`${FIREBASE_URL}/cards/${encodeURIComponent(slugId)}.json`);
+                                        if (res.ok) {
+                                                      const json = await res.json();
+                                                      if (json && json.name) data = json;
+                                        }
+                            } catch(e) {}
+                            if (!data) {
+                                        document.getElementById('loading-state').style.display = 'none';
+                                        document.getElementById('not-found').style.display = 'block';
+                                        return;
+                            }
+                  } else if (p.get('n')) {
+                            data = {
+                                        name: p.get('n') || '', title: p.get('t') || '', company: p.get('c') || 'Prominall GmbH',
+                                        phone: p.get('p') || '', email: p.get('e') || '', web: p.get('w') || 'prominall.com',
+                                        linkedin: p.get('li') || '', addr: p.get('a') || '', photo: p.get('img') || '',
+                            };
+                  } else {
+                            document.getElementById('loading-state').style.display = 'none';
+                            document.getElementById('not-found').style.display = 'block';
+                            return;
+                  }
+                  renderCard(data);
+          }
+
+          function renderCard(data) {
+                  document.getElementById('loading-state').style.display = 'none';
+                  document.getElementById('main-card').style.display = 'block';
+                  document.title = data.name + ' — ' + (data.company || 'Prominall');
+                  document.getElementById('hdr-name').textContent = data.name;
+                  document.getElementById('hdr-title').textContent = data.title || '';
+                  document.getElementById('hdr-company').textContent = data.company || 'Prominall GmbH';
+                  const avatarArea = document.getElementById('avatar-area');
+                  if (data.photo) {
+                            const img = document.createElement('img');
+                            img.className = 'avatar-img'; img.src = data.photo; img.alt = data.name;
+                            img.onerror = () => { img.style.display = 'none'; showInitials(); };
+                            avatarArea.appendChild(img);
+                  } else { showInitials(); }
+                  function showInitials() {
+                            const div = document.createElement('div');
+                            div.className = 'avatar-initials';
+                            div.textContent = data.name.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+                            avatarArea.appendChild(div);
+                  }
+                  const list = document.getElementById('contact-list');
+                  const SVGs = {
+                            phone: `<svg viewBox="0 0 24 24" fill="none" stroke="#4B5C3E" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>`,
+                            email: `<svg viewBox="0 0 24 24" fill="none" stroke="#C37113" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+                            web: `<svg viewBox="0 0 24 24" fill="none" stroke="#2C3625" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`,
+                            loc: `<svg viewBox="0 0 24 24" fill="none" stroke="#8B7D3A" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+                            li: `<svg viewBox="0 0 24 24" fill="none" stroke="#4B5C3E" stroke-width="2"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>`
+                  };
+                  const items = [];
+                  if (data.phone) items.push({ icon: SVGs.phone, cls: 'icon-phone', label: 'Phone', value: data.phone, href: 'tel:' + data.phone.replace(/\s/g,'') });
+                  if (data.email) items.push({ icon: SVGs.email, cls: 'icon-email', label: 'Email', value: data.email, href: 'mailto:' + data.email });
+                  if (data.web) items.push({ icon: SVGs.web, cls: 'icon-web', label: 'Website', value: data.web, href: 'https://' + data.web.replace(/^https?:\/\//,'') });
+                  if (data.addr) items.push({ icon: SVGs.loc, cls: 'icon-loc', label: 'Location', value: data.addr, href: 'https://maps.google.com?q=' + encodeURIComponent(data.addr) });
+                  if (data.linkedin) items.push({ icon: SVGs.li, cls: 'icon-li', label: 'LinkedIn', value: 'View Profile', href: data.linkedin.startsWith('http') ? data.linkedin : 'https://linkedin.com/in/' + data.linkedin });
+                  items.forEach(item => {
+                            const li = document.createElement('li');
+                            li.innerHTML = `<a class="contact-item" href="${item.href}" target="_blank" rel="noopener">
+                                      <div class="contact-icon ${item.cls}">${item.icon}</div>
+                                                <div class="contact-text">
+                                                            <div class="contact-label">${item.label}</div>
+                                                                        <div class="contact-value">${item.value}</div>
+                                                                                  </div></a>`;
+                            list.appendChild(li);
+                  });
+                  const nameParts = data.name.trim().split(' ');
+                  const lastName = nameParts.length > 1 ? nameParts[nameParts.length-1] : '';
+                  const firstName = nameParts.slice(0, nameParts.length > 1 ? -1 : 1).join(' ');
+                  const vcf = ['BEGIN:VCARD','VERSION:3.0',`FN:${data.name}`,`N:${lastName};${firstName};;;`,
+                                       data.title ? `TITLE:${data.title}` : '', data.company ? `ORG:${data.company}` : '',
+                                       data.phone ? `TEL;TYPE=WORK,VOICE:${data.phone}` : '', data.email ? `EMAIL;TYPE=WORK:${data.email}` : '',
+                                       data.web ? `URL:https://${data.web.replace(/^https?:\/\//,'')}` : '',
+                                       data.addr ? `ADR;TYPE=WORK:;;${data.addr};;;;` : '',
+                                       data.linkedin ? `URL;TYPE=LinkedIn:${data.linkedin.startsWith('http') ? data.linkedin : 'https://linkedin.com/in/'+data.linkedin}` : '',
+                                       'END:VCARD'].filter(Boolean).join('\r\n');
+                  const blob = new Blob([vcf], { type: 'text/vcard' });
+                  const btn = document.getElementById('save-btn');
+                  btn.href = URL.createObjectURL(blob);
+                  btn.download = data.name.replace(/\s+/g,'_') + '.vcf';
+                  const qrUrl = slugId ? window.location.origin + window.location.pathname.replace('card.html','') + 'card.html?id=' + slugId : window.location.href;
+                  new QRCode(document.getElementById('qr-code'), { text: qrUrl, width: 140, height: 140, colorDark: '#2C3625', colorLight: '#FDFCF7', correctLevel: QRCode.CorrectLevel.M });
+          }
+
+          init();
+    </script>
+  </body>
+</html>html>
+    </script></h2>
+  </body>
+    </style></title>
+  </head>
