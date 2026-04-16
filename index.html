@@ -24,10 +24,10 @@ input[type=text],input[type=tel],input[type=email],input[type=url]{width:100%;pa
 input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .divider{height:1px;background:var(--border);margin:1.5rem 0}
 .id-preview{background:rgba(75,92,62,0.06);border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-family:monospace;margin-top:5px;min-height:26px}
-.btn-generate{display:flex;width:100%;padding:13px;background:rgba(75,92,62,0.1);color:var(--forest);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.25s;margin-top:0.5rem;align-items:center;justify-content:center}
-.btn-generate:hover{background:var(--amber);color:white}
+.btn-generate{display:flex;width:100%;padding:13px;background:var(--forest);color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:background 0.25s;margin-top:0.5rem;align-items:center;justify-content:center}
+.btn-generate:hover{background:var(--amber)}
 .btn-save{width:100%;padding:13px;background:transparent;color:var(--olive);border:1px dashed var(--olive);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:0.75rem;transition:background 0.15s}
-.btn-save-update-mode{display:none;width:100%;padding:8px;background:transparent;border:1px solid rgba(195,113,19,0.3);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500;cursor:pointer}
+.btn-save-update-mode{display:none;width:100%;padding:10px;background:var(--amber);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:white;margin-top:0.75rem;font-weight:500;cursor:pointer}
 .btn-cancel{width:100%;padding:8px;background:transparent;color:var(--light);border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;margin-top:6px;display:none}
 .edit-banner{width:100%;padding:8px 12px;background:rgba(195,113,19,0.3);border-radius:8px;font-size:12px;color:var(--amber);margin-bottom:1rem;font-weight:500;display:none}
 .result-card{background:var(--pale);border:1px solid var(--border);border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
@@ -35,17 +35,32 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .result-avatar{width:52px;height:52px;border-radius:50%;background:rgba(195,113,19,0.2);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--amber);flex-shrink:0}
 .result-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--forest)}
 .result-title{font-size:11px;font-weight:500;color:var(--amber);text-transform:uppercase;letter-spacing:0.07em;margin-top:2px}
-.result-body{display:grid;grid-template-columns:1fr auto;gap:1.5rem;align-items:start}
+.result-body{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start}
 .link-box{margin-bottom:1rem}
 .link-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);margin-bottom:5px}
 .link-url{display:flex;align-items:center;gap:8px;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:8px 12px}
 .link-text{flex:1;font-size:12px;color:var(--light);word-break:break-all;font-family:monospace}
-.link-copy{background:var(--cream);border:none;border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
+.link-copy{background:white;border:1px solid var(--border);border-radius:6px;padding:5px 10px;font-size:12px;cursor:pointer}
+.link-copy:hover{background:var(--amber);color:white;border-color:var(--amber)}
+.qr-customizer{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;margin:1rem 0;display:flex;flex-direction:column;gap:10px}
+.qr-opt-row{display:flex;align-items:center;gap:12px}
+.qr-opt-label{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--light);min-width:80px;font-weight:500}
+.qr-opt-row select{flex:1;padding:8px 10px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;cursor:pointer;outline:none}
+.color-group{display:flex;align-items:center;gap:8px;flex:1}
+.color-group input[type=color]{width:40px;height:32px;border:1px solid var(--border);border-radius:6px;cursor:pointer;padding:2px;background:white}
+.color-presets{display:flex;gap:4px}
+.preset-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border);cursor:pointer;padding:0;transition:transform 0.15s}
+.preset-btn:hover{transform:scale(1.15)}
+.logo-controls{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.logo-btn{padding:6px 12px;background:white;border:1px solid var(--border);border-radius:6px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--forest)}
+.logo-btn:hover{background:var(--forest);color:white;border-color:var(--forest)}
+.logo-btn.logo-remove{color:#A33D2D;border-color:rgba(163,61,45,0.3)}
+.logo-btn.logo-remove:hover{background:#A33D2D;color:white}
 .action-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-.action-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:1px solid var(--border);background:white;color:var(--forest);transition:background 0.15s}
+.action-btn{display:flex;align-items:center;gap:6px;padding:9px 16px;border-radius:8px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;border:1px solid var(--border);background:white;color:var(--forest);transition:all 0.15s;font-weight:500}
+.action-btn:hover{background:var(--forest);color:white;border-color:var(--forest)}
 .qr-area{display:flex;flex-direction:column;align-items:center;gap:10px}
-.qr-area canvas,.qr-area img{width:140px;height:140px;display:block}
-.qr-download{font-size:11px;color:var(--light);cursor:pointer;text-decoration:underline;background:none;border:none}
+.qr-area canvas,.qr-area img{max-width:300px;height:auto;display:block}
 .team-section{margin-top:2rem}
 .team-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-radius:12px;padding:8px 10px;background:rgba(75,92,62,0.1)}
 .team-count{font-size:11px;color:var(--light)}
@@ -57,10 +72,11 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .team-name{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .team-role{font-size:11px;color:var(--light);text-transform:uppercase;letter-spacing:0.05em;margin-top:1px}
 .team-actions{display:flex;gap:4px}
-.mini-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mini-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.mini-btn:hover{background:var(--forest);border-color:var(--forest)}
+.mini-btn:hover svg{stroke:white}
 .mini-btn svg{width:13px;height:13px}
-.mini-btn.delete-btn:hover{background:#FFEAEA;border-color:#E2484A}
-.mini-btn.delete-btn:hover svg{stroke:#E2484A}
+.mini-btn.delete-btn:hover{background:#E2484A;border-color:#E2484A}
 .empty-state{text-align:center;padding:4rem 2rem;color:var(--light)}
 .empty-state h3{font-family:'Cormorant Garamond',serif;font-size:24px;margin-bottom:0.5rem;color:var(--forest)}
 .loading-team{text-align:center;padding:2rem;color:var(--light);font-size:13px}
@@ -68,7 +84,7 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .host-banner strong{color:var(--amber)}
 .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--forest);color:var(--cream);padding:10px 20px;border-radius:8px;font-size:13px;pointer-events:none;opacity:0;transition:opacity 0.2s;z-index:9999}
 .toast.show{opacity:1}
-.toast.error{background:#A3D2D0}
+.toast.error{background:#A33D2D}
 @media(max-width:900px){.main{grid-template-columns:1fr}.result-body{grid-template-columns:1fr}}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
@@ -125,30 +141,297 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 <script>
 const FIREBASE_URL = 'https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
 let currentSlug = '', editMode = false, editingId = '', teamData = [];
+let qrOptions = { size: 300, fgColor: '#2C3625', bgColor: '#FFFFFF', logo: null, logoSize: 0.25 };
+
 const EI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
 const CI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
 const DI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>';
-const apiGet=async()=>{const r=await fetch(FIREBASE_URL+'/cards.json');if(!r.ok)return[];const d=await r.json();if(!d)return[];return Object.values(d).filter(Boolean)};
-const apiSave=async(data)=>{const r=await fetch(FIREBASE_URL+'/cards/'+data.id+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});return r.ok};
-const apiDelete=async(id)=>{const r=await fetch(FIREBASE_URL+'/cards/'+id+'.json',{method:'DELETE'});return r.ok};
+
+const apiGet = async () => { const r = await fetch(FIREBASE_URL + '/cards.json'); if (!r.ok) return []; const d = await r.json(); if (!d) return []; return Object.values(d).filter(Boolean); };
+const apiSave = async (data) => { const r = await fetch(FIREBASE_URL + '/cards/' + data.id + '.json', {method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}); return r.ok; };
+const apiDelete = async (id) => { const r = await fetch(FIREBASE_URL + '/cards/' + id + '.json', {method:'DELETE'}); return r.ok; };
+
 function toSlug(n){return n.toLowerCase().replace(/ü/g,'u').replace(/ö/g,'o').replace(/ä/g,'a').replace(/ß/g,'ss').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ş/g,'s').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 function updateSlugPreview(){const n=document.getElementById('f-name').value.trim();const s=n?toSlug(n):'';document.getElementById('slug-preview').textContent=s?'card.html?id='+s:'ID will appear here'}
 function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
 function getFormData(){return{name:document.getElementById('f-name').value.trim(),title:document.getElementById('f-title').value.trim(),company:document.getElementById('f-company').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),web:document.getElementById('f-web').value.trim(),linkedin:document.getElementById('f-linkedin').value.trim(),addr:document.getElementById('f-addr').value.trim(),photo:document.getElementById('f-photo').value.trim()}}
-function generateCard(){const data=getFormData();if(!data.name){showToast('Please enter a name',true);return}const slug=editMode?editingId:toSlug(data.name);currentSlug=slug;const url=window.location.origin+'/prm-cards/card.html?id='+slug;document.getElementById('slug-preview').textContent=editMode?'Editing: '+slug:'card.html?id='+slug;const ra=document.getElementById('result-area');ra.innerHTML='<div class="result-card"><div class="result-header"><div style="display:flex;align-items:center;gap:12px"><div class="result-avatar">'+getInitials(data.name)+'</div><div><div class="result-name">'+data.name+'</div><div class="result-title">'+(data.title||'')+'</div></div></div></div><div class="result-body"><div><div class="link-box"><div class="link-label">Permanent Card URL</div><div class="link-url"><span class="link-text">'+url+'</span><button class="link-copy" onclick="copyUrl()">Copy</button></div></div><div class="link-box"><div class="link-label">Card ID</div><div class="link-url"><span class="link-text" style="font-family:monospace">'+slug+'</span><button class="link-copy" onclick="copySlug()">Copy</button></div></div><div class="action-row"><a href="'+url+'" target="_blank" class="action-btn">Open Card</a><button class="action-btn" onclick="downloadQR()">Download QR</button><button class="action-btn" onclick="printQR()">Print QR</button></div></div><div class="qr-area"><div id="qr-display"></div><button class="qr-download" onclick="downloadQR()">Download PNG</button></div></div></div>';if(window.QRCode){const el=document.getElementById('qr-display');el.innerHTML='';new QRCode(el,{text:url,width:140,height:140})}}
-async function saveCard(){const data=getFormData();if(!data.name){showToast('Please enter a name',true);return}const slug=editMode?editingId:toSlug(data.name);data.id=slug;data.updatedAt=new Date().toISOString();const ok=await apiSave(data);if(ok){showToast(editMode?'Card updated!':'Card saved!');if(!editMode)cancelEdit();loadTeam()}else showToast('Save failed',true)}
-function enterEditMode(id){const m=teamData.find(x=>x.id===id);if(!m)return;editMode=true;editingId=m.id;document.getElementById('f-name').value=m.name||'';document.getElementById('f-title').value=m.title||'';document.getElementById('f-company').value=m.company||'Prominall GmbH';document.getElementById('f-phone').value=m.phone||'';document.getElementById('f-email').value=m.email||'';document.getElementById('f-web').value=m.web||'';document.getElementById('f-linkedin').value=m.linkedin||'';document.getElementById('f-addr').value=m.addr||'';document.getElementById('f-photo').value=m.photo||'';document.getElementById('edit-banner').style.display='block';document.getElementById('edit-banner').textContent='Editing: '+m.name;document.getElementById('btn-cancel').style.display='block';document.getElementById('btn-update').style.display='block';document.getElementById('btn-save').style.display='none';document.getElementById('slug-preview').textContent='Editing: '+m.id;document.querySelector('.sidebar').scrollTop=0}
-function cancelEdit(){editMode=false;editingId='';['f-name','f-title','f-phone','f-email','f-web','f-linkedin','f-addr','f-photo'].forEach(id=>document.getElementById(id).value='');document.getElementById('f-company').value='Prominall GmbH';document.getElementById('edit-banner').style.display='none';document.getElementById('btn-cancel').style.display='none';document.getElementById('btn-update').style.display='none';document.getElementById('btn-save').style.display='block';document.getElementById('result-area').innerHTML='';updateSlugPreview()}
-async function deleteMember(id){if(!confirm('Delete this card?'))return;const ok=await apiDelete(id);if(ok){showToast('Card deleted');if(editingId===id)cancelEdit();loadTeam()}else showToast('Delete failed',true)}
-function copyUrl(){if(currentSlug)navigator.clipboard.writeText(window.location.origin+'/prm-cards/card.html?id='+currentSlug).then(()=>showToast('URL copied!'))}
-function copySlug(){if(currentSlug)navigator.clipboard.writeText(currentSlug).then(()=>showToast('Slug copied!'))}
-function copyUrl2(id){navigator.clipboard.writeText(window.location.origin+'/prm-cards/card.html?id='+id).then(()=>showToast('URL copied!'))}
-function downloadQR(){const c=document.querySelector('#qr-display canvas');if(!c){showToast('Generate a card first',true);return}const a=document.createElement('a');a.href=c.toDataURL('image/png');a.download='QR_'+currentSlug+'.png';a.click()}
-function printQR(){const c=document.querySelector('#qr-display canvas');if(!c){showToast('Generate a card first',true);return}const w=window.open('','','width=400,height=500');w.document.write('<html><body style="text-align:center;padding:2rem"><img src="'+c.toDataURL()+'"></body></html>');w.print()}
+
+// Gelişmiş QR kod üretici - renk ve logo destekli
+function renderQR(url, containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  const size = qrOptions.size;
+  
+  // Önce standart QR kod oluştur (canvas)
+  const tempDiv = document.createElement('div');
+  new QRCode(tempDiv, {
+    text: url,
+    width: size,
+    height: size,
+    colorDark: qrOptions.fgColor,
+    colorLight: qrOptions.bgColor,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  
+  // Canvas'ı al
+  setTimeout(() => {
+    const srcCanvas = tempDiv.querySelector('canvas');
+    if (!srcCanvas) { container.appendChild(tempDiv); return; }
+    
+    // Yeni canvas oluştur - logo için
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    canvas.style.maxWidth = '100%';
+    canvas.style.height = 'auto';
+    canvas.style.display = 'block';
+    const ctx = canvas.getContext('2d');
+    
+    // Arka plan
+    ctx.fillStyle = qrOptions.bgColor;
+    ctx.fillRect(0, 0, size, size);
+    // QR kodu çiz
+    ctx.drawImage(srcCanvas, 0, 0, size, size);
+    
+    // Logo ekle
+    if (qrOptions.logo) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const logoSize = size * qrOptions.logoSize;
+        const pad = logoSize * 0.1;
+        const x = (size - logoSize) / 2;
+        const y = (size - logoSize) / 2;
+        // Beyaz kare arka plan (QR'ı korur)
+        ctx.fillStyle = qrOptions.bgColor;
+        ctx.fillRect(x - pad, y - pad, logoSize + pad*2, logoSize + pad*2);
+        // Logo
+        ctx.drawImage(img, x, y, logoSize, logoSize);
+      };
+      img.onerror = () => { console.warn('Logo yuklenemedi'); };
+      img.src = qrOptions.logo;
+    }
+    
+    container.appendChild(canvas);
+  }, 50);
+}
+
+function generateCard() {
+  const data = getFormData();
+  if (!data.name) { showToast('Please enter a name', true); return; }
+  const slug = editMode ? editingId : toSlug(data.name);
+  currentSlug = slug;
+  const url = window.location.origin + '/prm-cards/card.html?id=' + slug;
+  document.getElementById('slug-preview').textContent = editMode ? 'Editing: ' + slug : 'card.html?id=' + slug;
+  const ra = document.getElementById('result-area');
+  ra.innerHTML = '<div class="result-card"><div class="result-header"><div style="display:flex;align-items:center;gap:12px"><div class="result-avatar">' + getInitials(data.name) + '</div><div><div class="result-name">' + data.name + '</div><div class="result-title">' + (data.title||'') + '</div></div></div></div>' +
+    '<div class="result-body"><div>' +
+    '<div class="link-box"><div class="link-label">Permanent Card URL</div><div class="link-url"><span class="link-text">' + url + '</span><button class="link-copy" onclick="copyUrl()">Copy</button></div></div>' +
+    '<div class="link-box"><div class="link-label">Card ID</div><div class="link-url"><span class="link-text" style="font-family:monospace">' + slug + '</span><button class="link-copy" onclick="copySlug()">Copy</button></div></div>' +
+    '<div class="qr-customizer">' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">Boyut</label><select id="qr-size" onchange="updateQROption()"><option value="200">Küçük (200px)</option><option value="300" selected>Orta (300px)</option><option value="500">Büyük (500px)</option><option value="800">Çok Büyük (800px)</option><option value="1200">HD Baskı (1200px)</option></select></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">QR Rengi</label><div class="color-group"><input type="color" id="qr-fg" value="' + qrOptions.fgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#2C3625" onclick="setQRColor(\'#2C3625\')" title="Forest"></button><button class="preset-btn" style="background:#000000" onclick="setQRColor(\'#000000\')" title="Siyah"></button><button class="preset-btn" style="background:#C37113" onclick="setQRColor(\'#C37113\')" title="Amber"></button><button class="preset-btn" style="background:#1E40AF" onclick="setQRColor(\'#1E40AF\')" title="Mavi"></button><button class="preset-btn" style="background:#991B1B" onclick="setQRColor(\'#991B1B\')" title="Kirmizi"></button></div></div></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">Arka Plan</label><div class="color-group"><input type="color" id="qr-bg" value="' + qrOptions.bgColor + '" onchange="updateQROption()"><div class="color-presets"><button class="preset-btn" style="background:#FFFFFF;border:1px solid #ccc" onclick="setQRBg(\'#FFFFFF\')" title="Beyaz"></button><button class="preset-btn" style="background:#F7F4E9" onclick="setQRBg(\'#F7F4E9\')" title="Krem"></button><button class="preset-btn" style="background:transparent;border:1px dashed #999" onclick="setQRBg(\'transparent\')" title="Seffaf"></button></div></div></div>' +
+    '<div class="qr-opt-row"><label class="qr-opt-label">Logo</label><div class="logo-controls"><input type="file" id="qr-logo-file" accept="image/*" onchange="uploadLogo(event)" style="display:none"><button class="logo-btn" onclick="document.getElementById(\'qr-logo-file\').click()">Logo Yukle</button><button class="logo-btn" onclick="useDefaultLogo()">Prominall Logo</button>' + (qrOptions.logo ? '<button class="logo-btn logo-remove" onclick="removeLogo()">Logoyu Kaldir</button>' : '') + '</div></div>' +
+    '</div>' +
+    '<div class="action-row">' +
+    '<a href="' + url + '" target="_blank" class="action-btn">Open Card</a>' +
+    '<button class="action-btn" onclick="downloadQR()">PNG Indir</button>' +
+    '<button class="action-btn" onclick="downloadQRHD()">HD Indir (1200px)</button>' +
+    '<button class="action-btn" onclick="printQR()">Yazdir</button>' +
+    '</div></div>' +
+    '<div class="qr-area">' +
+    '<div id="qr-display" style="padding:16px;background:white;border:1px solid var(--border);border-radius:12px;display:inline-block"></div>' +
+    '<div style="font-size:11px;color:var(--light);margin-top:8px">' + qrOptions.size + 'x' + qrOptions.size + ' px</div>' +
+    '</div></div></div>';
+  renderQR(url, 'qr-display');
+}
+
+function updateQROption() {
+  qrOptions.size = parseInt(document.getElementById('qr-size').value);
+  qrOptions.fgColor = document.getElementById('qr-fg').value;
+  qrOptions.bgColor = document.getElementById('qr-bg').value;
+  const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
+  renderQR(url, 'qr-display');
+  const sizeLabel = document.querySelector('.qr-area div:last-child');
+  if (sizeLabel) sizeLabel.textContent = qrOptions.size + 'x' + qrOptions.size + ' px';
+}
+
+function setQRColor(color) {
+  qrOptions.fgColor = color;
+  document.getElementById('qr-fg').value = color;
+  updateQROption();
+}
+
+function setQRBg(color) {
+  qrOptions.bgColor = color === 'transparent' ? '#FFFFFF' : color;
+  document.getElementById('qr-bg').value = qrOptions.bgColor;
+  updateQROption();
+}
+
+function uploadLogo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    qrOptions.logo = e.target.result;
+    generateCard();
+    showToast('Logo eklendi!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function useDefaultLogo() {
+  // Prominall P logosu (SVG olarak data URL)
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
+  qrOptions.logo = 'data:image/svg+xml;base64,' + btoa(svg);
+  generateCard();
+  showToast('Prominall logosu eklendi!');
+}
+
+function removeLogo() {
+  qrOptions.logo = null;
+  generateCard();
+  showToast('Logo kaldirildi');
+}
+
+async function saveCard() {
+  const data = getFormData();
+  if (!data.name) { showToast('Please enter a name', true); return; }
+  const slug = editMode ? editingId : toSlug(data.name);
+  data.id = slug;
+  data.updatedAt = new Date().toISOString();
+  const ok = await apiSave(data);
+  if (ok) { showToast(editMode ? 'Card updated!' : 'Card saved!'); if (!editMode) cancelEdit(); loadTeam(); }
+  else showToast('Save failed', true);
+}
+
+function enterEditMode(id) {
+  const m = teamData.find(x => x.id === id);
+  if (!m) return;
+  editMode = true; editingId = m.id;
+  document.getElementById('f-name').value = m.name || '';
+  document.getElementById('f-title').value = m.title || '';
+  document.getElementById('f-company').value = m.company || 'Prominall GmbH';
+  document.getElementById('f-phone').value = m.phone || '';
+  document.getElementById('f-email').value = m.email || '';
+  document.getElementById('f-web').value = m.web || '';
+  document.getElementById('f-linkedin').value = m.linkedin || '';
+  document.getElementById('f-addr').value = m.addr || '';
+  document.getElementById('f-photo').value = m.photo || '';
+  document.getElementById('edit-banner').style.display = 'block';
+  document.getElementById('edit-banner').textContent = 'Editing: ' + m.name;
+  document.getElementById('btn-cancel').style.display = 'block';
+  document.getElementById('btn-update').style.display = 'block';
+  document.getElementById('btn-save').style.display = 'none';
+  document.getElementById('slug-preview').textContent = 'Editing: ' + m.id;
+  document.querySelector('.sidebar').scrollTop = 0;
+  generateCard();
+}
+
+function cancelEdit() {
+  editMode = false; editingId = '';
+  ['f-name','f-title','f-phone','f-email','f-web','f-linkedin','f-addr','f-photo'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-company').value = 'Prominall GmbH';
+  document.getElementById('edit-banner').style.display = 'none';
+  document.getElementById('btn-cancel').style.display = 'none';
+  document.getElementById('btn-update').style.display = 'none';
+  document.getElementById('btn-save').style.display = 'block';
+  document.getElementById('result-area').innerHTML = '';
+  updateSlugPreview();
+}
+
+async function deleteMember(id) {
+  if (!confirm('Delete this card?')) return;
+  const ok = await apiDelete(id);
+  if (ok) { showToast('Card deleted'); if (editingId === id) cancelEdit(); loadTeam(); }
+  else showToast('Delete failed', true);
+}
+
+function copyUrl() { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/prm-cards/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
+function copySlug() { if (currentSlug) navigator.clipboard.writeText(currentSlug).then(() => showToast('Slug copied!')); }
+function copyUrl2(id) { navigator.clipboard.writeText(window.location.origin + '/prm-cards/card.html?id=' + id).then(() => showToast('URL copied!')); }
+
+function downloadQR() {
+  const c = document.querySelector('#qr-display canvas');
+  if (!c) { showToast('Generate a card first', true); return; }
+  const a = document.createElement('a');
+  a.href = c.toDataURL('image/png');
+  a.download = 'QR_' + currentSlug + '_' + qrOptions.size + 'px.png';
+  a.click();
+  showToast('QR indirildi!');
+}
+
+function downloadQRHD() {
+  if (!currentSlug) { showToast('Generate a card first', true); return; }
+  const savedSize = qrOptions.size;
+  qrOptions.size = 1200;
+  const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
+  const tempContainer = document.createElement('div');
+  tempContainer.id = 'qr-temp-hd';
+  tempContainer.style.position = 'fixed';
+  tempContainer.style.left = '-9999px';
+  document.body.appendChild(tempContainer);
+  renderQR(url, 'qr-temp-hd');
+  setTimeout(() => {
+    const c = tempContainer.querySelector('canvas');
+    if (c) {
+      const a = document.createElement('a');
+      a.href = c.toDataURL('image/png');
+      a.download = 'QR_' + currentSlug + '_HD_1200px.png';
+      a.click();
+      showToast('HD QR indirildi!');
+    }
+    document.body.removeChild(tempContainer);
+    qrOptions.size = savedSize;
+  }, 500);
+}
+
+function printQR() {
+  const c = document.querySelector('#qr-display canvas');
+  if (!c) { showToast('Generate a card first', true); return; }
+  const w = window.open('', '', 'width=600,height=700');
+  w.document.write('<html><body style="text-align:center;padding:2rem;font-family:sans-serif"><h2>' + (document.querySelector('.result-name')?.textContent || '') + '</h2><img src="' + c.toDataURL() + '" style="max-width:100%"></body></html>');
+  w.document.close();
+  setTimeout(() => w.print(), 300);
+}
+
 let toastTimer;
-function showToast(msg,isError=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isError?' error':'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500)}
-async function loadTeam(){const grid=document.getElementById('team-grid');grid.innerHTML='<div class="loading-team">Loading...</div>';try{teamData=await apiGet();if(!teamData.length){grid.innerHTML='<div class="empty-state"><h3>No cards yet</h3><p>Create your first card using the form.</p></div>';document.getElementById('team-count').textContent='';return}document.getElementById('team-count').textContent=teamData.length+' member'+(teamData.length!==1?'s':'');grid.innerHTML='';teamData.forEach(m=>{const d=document.createElement('div');d.className='team-card'+(editingId===m.id?' active-edit':'');const q="'";d.innerHTML='<div style="display:flex;align-items:center;gap:12px"><div class="team-avatar-sm">'+getInitials(m.name)+'</div><div class="team-info"><div class="team-name">'+m.name+'</div><div class="team-role">'+(m.title||'')+'</div></div><div class="team-actions"><button class="mini-btn" title="Edit" onclick="enterEditMode('+q+m.id+q+')">'+EI+'</button><button class="mini-btn" title="Copy" onclick="copyUrl2('+q+m.id+q+')">'+CI+'</button><button class="mini-btn delete-btn" title="Delete" onclick="deleteMember('+q+m.id+q+')">'+DI+'</button></div></div>';grid.appendChild(d)})}catch(e){grid.innerHTML='<div style="color:#A33D2D;padding:1rem;">Connection error.</div>'}}
-updateSlugPreview();loadTeam();
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+async function loadTeam() {
+  const grid = document.getElementById('team-grid');
+  grid.innerHTML = '<div class="loading-team">Loading...</div>';
+  try {
+    teamData = await apiGet();
+    if (!teamData.length) {
+      grid.innerHTML = '<div class="empty-state"><h3>No cards yet</h3><p>Create your first card using the form.</p></div>';
+      document.getElementById('team-count').textContent = '';
+      return;
+    }
+    document.getElementById('team-count').textContent = teamData.length + ' member' + (teamData.length !== 1 ? 's' : '');
+    grid.innerHTML = '';
+    teamData.forEach(m => {
+      const d = document.createElement('div');
+      d.className = 'team-card' + (editingId === m.id ? ' active-edit' : '');
+      const q = "'";
+      d.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div class="team-avatar-sm">' + getInitials(m.name) + '</div><div class="team-info"><div class="team-name">' + m.name + '</div><div class="team-role">' + (m.title || '') + '</div></div><div class="team-actions"><button class="mini-btn" title="Edit" onclick="enterEditMode(' + q + m.id + q + ')">' + EI + '</button><button class="mini-btn" title="Copy" onclick="copyUrl2(' + q + m.id + q + ')">' + CI + '</button><button class="mini-btn delete-btn" title="Delete" onclick="deleteMember(' + q + m.id + q + ')">' + DI + '</button></div></div>';
+      grid.appendChild(d);
+    });
+  } catch (e) {
+    grid.innerHTML = '<div style="color:#A33D2D;padding:1rem;">Connection error.</div>';
+  }
+}
+
+updateSlugPreview();
+loadTeam();
 </script>
 </body>
 </html>
