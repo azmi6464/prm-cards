@@ -61,6 +61,15 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 .action-btn:hover{background:var(--forest);color:white;border-color:var(--forest)}
 .action-btn.primary{background:var(--amber);color:white;border-color:var(--amber)}
 .action-btn.primary:hover{background:var(--forest);border-color:var(--forest)}
+.dl-menu{position:relative;display:inline-block}
+.dl-menu-list{position:absolute;top:100%;left:0;margin-top:4px;background:white;border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(44,54,37,0.15);min-width:240px;z-index:50;padding:6px;display:none}
+.dl-menu-list.show{display:block}
+.dl-menu-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:7px;font-size:13px;color:var(--forest);cursor:pointer;border:none;background:transparent;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.dl-menu-item:hover{background:var(--cream)}
+.dl-menu-item .dl-icon{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--pale);border:1px solid var(--border)}
+.dl-menu-item .dl-icon canvas,.dl-menu-item .dl-icon svg{width:18px;height:18px;display:block}
+.dl-menu-item .dl-label{flex:1;font-weight:500}
+.dl-menu-item .dl-sub{font-size:10px;color:var(--light);display:block;font-weight:400;margin-top:1px}
 .qr-area{display:flex;flex-direction:column;align-items:center;gap:10px}
 .qr-area canvas,.qr-area img{max-width:300px;height:auto;display:block}
 .team-section{margin-top:2rem}
@@ -143,6 +152,7 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 <div class="form-group"><label>LinkedIn</label><input type="text" id="f-linkedin" placeholder="linkedin.com/in/username"></div>
 <div class="form-group"><label>Location</label><input type="text" id="f-addr" placeholder="Bremen, Germany"></div>
 <div class="form-group"><label>Photo URL (optional)</label><input type="url" id="f-photo" placeholder="https://..."></div>
+<div class="form-group"><label>Footer Sertifikalar / Etiket</label><input type="text" id="f-cert" placeholder="GMP+ · ISO 22000 · HACCP"><div style="font-size:10px;color:var(--light);margin-top:4px;letter-spacing:0.02em">Kart altındaki metin. Boş bırakılırsa gizlenir.</div></div>
 <button class="btn-generate" id="btn-generate" onclick="generateCard()">Generate Card</button>
 <button class="btn-save" id="btn-save" onclick="saveCard()">+ Save to Database</button>
 <button class="btn-save-update-mode" id="btn-update" onclick="saveCard()">Update Card</button>
@@ -163,7 +173,6 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 </div>
 </section>
 </div>
-
 <div class="modal-overlay" id="wp-modal">
 <div class="modal" style="position:relative">
 <button class="modal-close" onclick="closeWallpaper()">×</button>
@@ -219,14 +228,13 @@ input:focus{border-color:var(--olive);box-shadow:0 0 0 3px rgba(75,92,62,0.1)}
 </div>
 </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 const FIREBASE_URL = 'https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
 let currentSlug = '', editMode = false, editingId = '', teamData = [];
 let qrOptions = { size: 300, fgColor: '#2C3625', bgColor: '#FFFFFF', logo: null, logoSize: 0.25 };
 let wpState = { bgImg: null, qrX: 0.30, qrY: 0.60, qrSize: 0.40, qrColor: '#000000', bgOpacity: 0.85, logo: null };
+
 const EI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>';
 const CI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
 const DI = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>';
@@ -238,7 +246,7 @@ const apiDelete = async (id) => { const r = await fetch(FIREBASE_URL + '/cards/'
 function toSlug(n){return n.toLowerCase().replace(/ü/g,'u').replace(/ö/g,'o').replace(/ä/g,'a').replace(/ß/g,'ss').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ş/g,'s').replace(/ç/g,'c').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 function updateSlugPreview(){const n=document.getElementById('f-name').value.trim();const s=n?toSlug(n):'';document.getElementById('slug-preview').textContent=s?'card.html?id='+s:'ID will appear here'}
 function getInitials(n){return n.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase()}
-function getFormData(){return{name:document.getElementById('f-name').value.trim(),title:document.getElementById('f-title').value.trim(),company:document.getElementById('f-company').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),web:document.getElementById('f-web').value.trim(),linkedin:document.getElementById('f-linkedin').value.trim(),addr:document.getElementById('f-addr').value.trim(),photo:document.getElementById('f-photo').value.trim()}}
+function getFormData(){return{name:document.getElementById('f-name').value.trim(),title:document.getElementById('f-title').value.trim(),company:document.getElementById('f-company').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),web:document.getElementById('f-web').value.trim(),linkedin:document.getElementById('f-linkedin').value.trim(),addr:document.getElementById('f-addr').value.trim(),photo:document.getElementById('f-photo').value.trim(),cert:document.getElementById('f-cert').value.trim()}}
 
 function renderQR(url, containerId) {
   const container = document.getElementById(containerId);
@@ -254,19 +262,12 @@ function renderQR(url, containerId) {
     canvas.width = size; canvas.height = size;
     canvas.style.maxWidth = '100%'; canvas.style.height = 'auto'; canvas.style.display = 'block';
     const ctx = canvas.getContext('2d');
-    ctx.fillStyle = qrOptions.bgColor; ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = qrOptions.bgColor;
+    ctx.fillRect(0, 0, size, size);
     ctx.drawImage(srcCanvas, 0, 0, size, size);
     if (qrOptions.logo) {
       const img = new Image(); img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        const logoSize = size * qrOptions.logoSize;
-        const pad = logoSize * 0.1;
-        const x = (size - logoSize) / 2;
-        const y = (size - logoSize) / 2;
-        ctx.fillStyle = qrOptions.bgColor;
-        ctx.fillRect(x - pad, y - pad, logoSize + pad*2, logoSize + pad*2);
-        ctx.drawImage(img, x, y, logoSize, logoSize);
-      };
+      img.onload = () => { const logoSize = size * qrOptions.logoSize; const pad = logoSize * 0.1; const x = (size - logoSize) / 2; const y = (size - logoSize) / 2; ctx.fillStyle = qrOptions.bgColor; ctx.fillRect(x - pad, y - pad, logoSize + pad*2, logoSize + pad*2); ctx.drawImage(img, x, y, logoSize, logoSize); };
       img.src = qrOptions.logo;
     }
     container.appendChild(canvas);
@@ -293,10 +294,17 @@ function generateCard() {
     '</div>' +
     '<div class="action-row">' +
     '<a href="' + url + '" target="_blank" class="action-btn">Open Card</a>' +
-    '<button class="action-btn" onclick="downloadQR()">PNG İndir</button>' +
-    '<button class="action-btn" onclick="downloadQRHD()">HD İndir (1200px)</button>' +
+    '<div class="dl-menu"><button class="action-btn primary" onclick="toggleDlMenu(event)">⬇ İndir ▾</button>' +
+    '<div class="dl-menu-list" id="dl-menu-list">' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'plain\')"><div class="dl-icon" style="background:#FFF"><div style="width:16px;height:16px;background:repeating-linear-gradient(45deg,#2C3625 0 2px,transparent 2px 4px)"></div></div><div><div class="dl-label">Düz PNG</div><div class="dl-sub">Sade QR · seçili boyut</div></div></button>' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'framed\')"><div class="dl-icon" style="background:#000"><div style="width:14px;height:14px;background:#FFF"></div></div><div><div class="dl-label">Siyah Çerçeveli</div><div class="dl-sub">Kalın siyah kenarlık</div></div></button>' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'rounded\')"><div class="dl-icon" style="background:#FFF;border-radius:10px"><div style="width:14px;height:14px;background:#2C3625;border-radius:4px"></div></div><div><div class="dl-label">Yuvarlak Köşeli</div><div class="dl-sub">Yumuşak köşeler · ince çerçeve</div></div></button>' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'labeled\')"><div class="dl-icon" style="background:#FDFCF7;flex-direction:column"><div style="width:12px;height:10px;background:#2C3625"></div><div style="width:16px;height:3px;background:#C37113;margin-top:2px"></div></div><div><div class="dl-label">Etiketli (İsimli)</div><div class="dl-sub">Altında isim/şirket · kartvizit stili</div></div></button>' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'amber\')"><div class="dl-icon" style="background:#C37113"><div style="width:14px;height:14px;background:#FFF"></div></div><div><div class="dl-label">Amber Çerçeve</div><div class="dl-sub">Prominall kurumsal renk</div></div></button>' +
+    '<button class="dl-menu-item" onclick="downloadQR(\'hd\')"><div class="dl-icon" style="background:var(--forest);color:#FFF;font-size:9px;font-weight:700">HD</div><div><div class="dl-label">HD Baskı (1200px)</div><div class="dl-sub">Yüksek çözünürlük · sade</div></div></button>' +
+    '</div></div>' +
     '<button class="action-btn" onclick="printQR()">Yazdır</button>' +
-    '<button class="action-btn primary" onclick="openWallpaper()">📱 iPhone Wallpaper</button>' +
+    '<button class="action-btn" onclick="openWallpaper()">📱 iPhone Wallpaper</button>' +
     '</div></div>' +
     '<div class="qr-area">' +
     '<div id="qr-display" style="padding:16px;background:white;border:1px solid var(--border);border-radius:12px;display:inline-block"></div>' +
@@ -304,6 +312,8 @@ function generateCard() {
     '</div></div></div>';
   renderQR(url, 'qr-display');
 }
+
+function toggleDlMenu(e){ e.stopPropagation(); const m=document.getElementById('dl-menu-list'); m.classList.toggle('show'); const close=(ev)=>{ if(!m.contains(ev.target)){ m.classList.remove('show'); document.removeEventListener('click',close);} }; setTimeout(()=>document.addEventListener('click',close),10); }
 
 function updateQROption() {
   qrOptions.size = parseInt(document.getElementById('qr-size').value);
@@ -317,28 +327,160 @@ function updateQROption() {
 function setQRColor(color) { qrOptions.fgColor = color; document.getElementById('qr-fg').value = color; updateQROption(); }
 function setQRBg(color) { qrOptions.bgColor = color === 'transparent' ? '#FFFFFF' : color; document.getElementById('qr-bg').value = qrOptions.bgColor; updateQROption(); }
 function uploadLogo(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { qrOptions.logo = e.target.result; generateCard(); showToast('Logo eklendi!'); }; reader.readAsDataURL(file); }
-function useDefaultLogo() {
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
-  qrOptions.logo = 'data:image/svg+xml;base64,' + btoa(svg);
-  generateCard(); showToast('Prominall logosu eklendi!');
-}
+function useDefaultLogo() { const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>'; qrOptions.logo = 'data:image/svg+xml;base64,' + btoa(svg); generateCard(); showToast('Prominall logosu eklendi!'); }
 function removeLogo() { qrOptions.logo = null; generateCard(); showToast('Logo kaldırıldı'); }
+
+// ============ QR Download Styles ============
+function buildQRCanvas(url, size, fg, bg){
+  return new Promise((resolve)=>{
+    const tempDiv = document.createElement('div');
+    new QRCode(tempDiv, { text: url, width: size, height: size, colorDark: fg, colorLight: bg, correctLevel: QRCode.CorrectLevel.H });
+    setTimeout(()=>{
+      const c = tempDiv.querySelector('canvas');
+      if(!c){ resolve(null); return; }
+      const out = document.createElement('canvas');
+      out.width = size; out.height = size;
+      const ctx = out.getContext('2d');
+      ctx.fillStyle = bg; ctx.fillRect(0,0,size,size);
+      ctx.drawImage(c, 0, 0, size, size);
+      resolve(out);
+    }, 80);
+  });
+}
+function drawLogoCenter(canvas, logo, bg){
+  return new Promise((resolve)=>{
+    if(!logo){ resolve(); return; }
+    const img = new Image(); img.onload = ()=>{
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const ls = size * 0.22; const pad = ls * 0.1;
+      const x = (size - ls)/2; const y = (size - ls)/2;
+      ctx.fillStyle = bg; ctx.fillRect(x-pad, y-pad, ls+pad*2, ls+pad*2);
+      ctx.drawImage(img, x, y, ls, ls); resolve();
+    };
+    img.onerror = ()=>resolve(); img.src = logo;
+  });
+}
+function roundRectPath(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function dlCanvas(canvas, filename){ const a=document.createElement('a'); a.href=canvas.toDataURL('image/png'); a.download=filename; a.click(); }
+
+async function downloadQR(style){
+  if(!currentSlug){ showToast('Önce kart oluştur', true); return; }
+  document.getElementById('dl-menu-list')?.classList.remove('show');
+  const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
+  const data = getFormData();
+  if(style==='plain'){
+    const qr = await buildQRCanvas(url, qrOptions.size, qrOptions.fgColor, qrOptions.bgColor);
+    if(!qr){ showToast('QR üretilemedi', true); return; }
+    await drawLogoCenter(qr, qrOptions.logo, qrOptions.bgColor);
+    dlCanvas(qr, 'QR_' + currentSlug + '_' + qrOptions.size + 'px.png');
+    showToast('QR indirildi!');
+    return;
+  }
+  if(style==='hd'){
+    const qr = await buildQRCanvas(url, 1200, qrOptions.fgColor, qrOptions.bgColor);
+    if(!qr){ showToast('QR üretilemedi', true); return; }
+    await drawLogoCenter(qr, qrOptions.logo, qrOptions.bgColor);
+    dlCanvas(qr, 'QR_' + currentSlug + '_HD_1200px.png');
+    showToast('HD QR indirildi!');
+    return;
+  }
+  if(style==='framed'){
+    const s = qrOptions.size;
+    const border = Math.round(s * 0.08);
+    const W = s + border*2;
+    const out = document.createElement('canvas'); out.width = W; out.height = W;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#000000'; ctx.fillRect(0,0,W,W);
+    const qr = await buildQRCanvas(url, s, qrOptions.fgColor, '#FFFFFF');
+    await drawLogoCenter(qr, qrOptions.logo, '#FFFFFF');
+    ctx.drawImage(qr, border, border);
+    dlCanvas(out, 'QR_' + currentSlug + '_framed.png');
+    showToast('Siyah çerçeveli QR indirildi!');
+    return;
+  }
+  if(style==='amber'){
+    const s = qrOptions.size;
+    const border = Math.round(s * 0.08);
+    const W = s + border*2;
+    const out = document.createElement('canvas'); out.width = W; out.height = W;
+    const ctx = out.getContext('2d');
+    ctx.fillStyle = '#C37113'; ctx.fillRect(0,0,W,W);
+    const qr = await buildQRCanvas(url, s, qrOptions.fgColor, '#FFFFFF');
+    await drawLogoCenter(qr, qrOptions.logo, '#FFFFFF');
+    ctx.drawImage(qr, border, border);
+    dlCanvas(out, 'QR_' + currentSlug + '_amber.png');
+    showToast('Amber çerçeveli QR indirildi!');
+    return;
+  }
+  if(style==='rounded'){
+    const s = qrOptions.size;
+    const border = Math.round(s * 0.05);
+    const W = s + border*2;
+    const radius = Math.round(W * 0.08);
+    const out = document.createElement('canvas'); out.width = W; out.height = W;
+    const ctx = out.getContext('2d');
+    roundRectPath(ctx, 0, 0, W, W, radius);
+    ctx.fillStyle = '#FFFFFF'; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(44,54,37,0.25)'; ctx.stroke();
+    const qr = await buildQRCanvas(url, s, qrOptions.fgColor, '#FFFFFF');
+    await drawLogoCenter(qr, qrOptions.logo, '#FFFFFF');
+    ctx.save();
+    roundRectPath(ctx, border, border, s, s, Math.max(4, radius-border));
+    ctx.clip();
+    ctx.drawImage(qr, border, border);
+    ctx.restore();
+    dlCanvas(out, 'QR_' + currentSlug + '_rounded.png');
+    showToast('Yuvarlak köşeli QR indirildi!');
+    return;
+  }
+  if(style==='labeled'){
+    const s = qrOptions.size;
+    const pad = Math.round(s * 0.1);
+    const textArea = Math.round(s * 0.28);
+    const W = s + pad*2;
+    const H = s + pad*2 + textArea;
+    const out = document.createElement('canvas'); out.width = W; out.height = H;
+    const ctx = out.getContext('2d');
+    const radius = Math.round(W * 0.06);
+    roundRectPath(ctx, 0, 0, W, H, radius);
+    ctx.fillStyle = '#FDFCF7'; ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = '#C37113'; ctx.stroke();
+    const qr = await buildQRCanvas(url, s, qrOptions.fgColor, '#FFFFFF');
+    await drawLogoCenter(qr, qrOptions.logo, '#FFFFFF');
+    ctx.drawImage(qr, pad, pad);
+    const textY = s + pad + Math.round(textArea * 0.4);
+    ctx.fillStyle = '#2C3625';
+    ctx.textAlign = 'center';
+    ctx.font = '600 ' + Math.round(textArea*0.27) + 'px "Cormorant Garamond", Georgia, serif';
+    ctx.fillText(data.name || 'Prominall', W/2, textY);
+    ctx.fillStyle = '#C37113';
+    ctx.font = '500 ' + Math.round(textArea*0.15) + 'px "DM Sans", Arial, sans-serif';
+    const sub = (data.title || data.company || 'prominall.com');
+    ctx.fillText(sub, W/2, textY + Math.round(textArea*0.25));
+    ctx.fillStyle = '#6B7D5E';
+    ctx.font = '400 ' + Math.round(textArea*0.12) + 'px "DM Sans", Arial, sans-serif';
+    ctx.fillText('Scan to connect', W/2, textY + Math.round(textArea*0.45));
+    dlCanvas(out, 'QR_' + currentSlug + '_labeled.png');
+    showToast('Etiketli QR indirildi!');
+    return;
+  }
+}
 
 // ============ iPhone Wallpaper Studio ============
 const WP_PRESETS = [
   { name: 'Forest', val: 'linear-gradient(160deg,#2C3625,#4A5C3E,#607D5E)' },
-  { name: 'Amber',  val: 'linear-gradient(160deg,#C37113,#F7B955,#F7F4E9)' },
-  { name: 'Night',  val: 'linear-gradient(180deg,#0F172A,#1E293B,#334155)' },
+  { name: 'Amber', val: 'linear-gradient(160deg,#C37113,#F7B955,#F7F4E9)' },
+  { name: 'Night', val: 'linear-gradient(180deg,#0F172A,#1E293B,#334155)' },
   { name: 'Sunset', val: 'linear-gradient(180deg,#FF6B6B,#FFD93D,#6BCB77)' },
-  { name: 'Ocean',  val: 'linear-gradient(180deg,#1E40AF,#3B82F6,#93C5FD)' },
-  { name: 'Rose',   val: 'linear-gradient(160deg,#881337,#BE185D,#F9A8D4)' },
-  { name: 'Mint',   val: 'linear-gradient(160deg,#065F46,#10B981,#A7F3D0)' },
-  { name: 'Paper',  val: 'linear-gradient(180deg,#F7F4E9,#E5DFC9)' }
+  { name: 'Ocean', val: 'linear-gradient(180deg,#1E40AF,#3B82F6,#93C5FD)' },
+  { name: 'Rose', val: 'linear-gradient(160deg,#881337,#BE185D,#F9A8D4)' },
+  { name: 'Mint', val: 'linear-gradient(160deg,#065F46,#10B981,#A7F3D0)' },
+  { name: 'Paper', val: 'linear-gradient(180deg,#F7F4E9,#E5DFC9)' }
 ];
 
 function gradientToDataURL(gradient) {
-  const c = document.createElement('canvas');
-  c.width = 1170; c.height = 2532;
+  const c = document.createElement('canvas'); c.width = 1170; c.height = 2532;
   const ctx = c.getContext('2d');
   const m = gradient.match(/linear-gradient\(([^,]+),(.+)\)/);
   if (!m) { ctx.fillStyle = '#2C3625'; ctx.fillRect(0,0,1170,2532); return c.toDataURL(); }
@@ -348,230 +490,87 @@ function gradientToDataURL(gradient) {
   if (angle.includes('180')) g = ctx.createLinearGradient(0,0,0,2532);
   else g = ctx.createLinearGradient(0,0,1170,2532);
   stops.forEach((s,i) => g.addColorStop(i/(stops.length-1), s));
-  ctx.fillStyle = g;
-  ctx.fillRect(0,0,1170,2532);
+  ctx.fillStyle = g; ctx.fillRect(0,0,1170,2532);
   return c.toDataURL();
 }
 
 function openWallpaper() {
   if (!currentSlug) { showToast('Önce kart oluştur', true); return; }
-  const modal = document.getElementById('wp-modal');
-  modal.classList.add('show');
+  const modal = document.getElementById('wp-modal'); modal.classList.add('show');
   const presetContainer = document.getElementById('wp-bg-presets');
   presetContainer.innerHTML = '';
-  WP_PRESETS.forEach((p, i) => {
-    const b = document.createElement('div');
-    b.className = 'wp-bg-preset';
-    b.style.background = p.val;
-    b.title = p.name;
-    b.onclick = () => selectPreset(i);
-    presetContainer.appendChild(b);
-  });
-  selectPreset(0);
-  setupQRDrag();
-  updateWpQR();
+  WP_PRESETS.forEach((p, i) => { const b = document.createElement('div'); b.className = 'wp-bg-preset'; b.style.background = p.val; b.title = p.name; b.onclick = () => selectPreset(i); presetContainer.appendChild(b); });
+  selectPreset(0); setupQRDrag(); updateWpQR();
 }
-
-function selectPreset(idx) {
-  const preset = WP_PRESETS[idx];
-  document.querySelectorAll('.wp-bg-preset').forEach((e, i) => e.classList.toggle('active', i === idx));
-  const dataUrl = gradientToDataURL(preset.val);
-  wpState.bgImg = dataUrl;
-  document.getElementById('wp-bg').src = dataUrl;
-}
-
+function selectPreset(idx) { const preset = WP_PRESETS[idx]; document.querySelectorAll('.wp-bg-preset').forEach((e, i) => e.classList.toggle('active', i === idx)); const dataUrl = gradientToDataURL(preset.val); wpState.bgImg = dataUrl; document.getElementById('wp-bg').src = dataUrl; }
 function closeWallpaper() { document.getElementById('wp-modal').classList.remove('show'); }
-
-function uploadWallpaperBg(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    wpState.bgImg = e.target.result;
-    document.getElementById('wp-bg').src = e.target.result;
-    document.querySelectorAll('.wp-bg-preset').forEach(el => el.classList.remove('active'));
-    showToast('Arka plan yüklendi!');
-  };
-  reader.readAsDataURL(file);
-}
-
-function updateQRSize(val) {
-  wpState.qrSize = parseInt(val) / 100;
-  document.getElementById('wp-size-val').textContent = val;
-  const box = document.getElementById('wp-qr-box');
-  box.style.width = (wpState.qrSize * 100) + '%';
-}
-
-function updateBgOpacity(val) {
-  wpState.bgOpacity = parseInt(val) / 100;
-  document.getElementById('wp-bg-op-val').textContent = val;
-  const box = document.getElementById('wp-qr-box');
-  box.style.background = 'rgba(255,255,255,' + wpState.bgOpacity + ')';
-}
-
-function setWpColor(color) {
-  wpState.qrColor = color;
-  document.getElementById('wp-qr-color').value = color;
-  updateWpQR();
-}
-
+function uploadWallpaperBg(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (e) => { wpState.bgImg = e.target.result; document.getElementById('wp-bg').src = e.target.result; document.querySelectorAll('.wp-bg-preset').forEach(el => el.classList.remove('active')); showToast('Arka plan yüklendi!'); }; reader.readAsDataURL(file); }
+function updateQRSize(val) { wpState.qrSize = parseInt(val) / 100; document.getElementById('wp-size-val').textContent = val; const box = document.getElementById('wp-qr-box'); box.style.width = (wpState.qrSize * 100) + '%'; }
+function updateBgOpacity(val) { wpState.bgOpacity = parseInt(val) / 100; document.getElementById('wp-bg-op-val').textContent = val; const box = document.getElementById('wp-qr-box'); box.style.background = 'rgba(255,255,255,' + wpState.bgOpacity + ')'; }
+function setWpColor(color) { wpState.qrColor = color; document.getElementById('wp-qr-color').value = color; updateWpQR(); }
 function updateWpQR() {
   wpState.qrColor = document.getElementById('wp-qr-color').value;
   const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
   const container = document.createElement('div');
   new QRCode(container, { text: url, width: 400, height: 400, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
   setTimeout(() => {
-    const srcCanvas = container.querySelector('canvas');
-    if (!srcCanvas) return;
-    const preview = document.getElementById('wp-qr-canvas');
-    preview.width = 400; preview.height = 400;
-    const ctx = preview.getContext('2d');
-    ctx.clearRect(0,0,400,400);
-    ctx.drawImage(srcCanvas, 0, 0, 400, 400);
-    if (wpState.logo) {
-      const img = new Image();
-      img.onload = () => {
-        const ls = 400 * 0.22;
-        const pad = ls * 0.1;
-        const x = (400 - ls) / 2;
-        const y = (400 - ls) / 2;
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(x - pad, y - pad, ls + pad*2, ls + pad*2);
-        ctx.drawImage(img, x, y, ls, ls);
-      };
-      img.src = wpState.logo;
-    }
+    const srcCanvas = container.querySelector('canvas'); if (!srcCanvas) return;
+    const preview = document.getElementById('wp-qr-canvas'); preview.width = 400; preview.height = 400;
+    const ctx = preview.getContext('2d'); ctx.clearRect(0,0,400,400); ctx.drawImage(srcCanvas, 0, 0, 400, 400);
+    if (wpState.logo) { const img = new Image(); img.onload = () => { const ls = 400 * 0.22; const pad = ls * 0.1; const x = (400 - ls) / 2; const y = (400 - ls) / 2; ctx.fillStyle = '#FFFFFF'; ctx.fillRect(x - pad, y - pad, ls + pad*2, ls + pad*2); ctx.drawImage(img, x, y, ls, ls); }; img.src = wpState.logo; }
   }, 50);
 }
-
-function wpUseProminall() {
-  const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>';
-  wpState.logo = 'data:image/svg+xml;base64,' + btoa(svg);
-  updateWpQR();
-  showToast('Prominall logosu eklendi');
-}
-
+function wpUseProminall() { const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#C37113"/><text x="50" y="72" font-family="Georgia, serif" font-size="68" font-weight="600" text-anchor="middle" fill="white">P</text></svg>'; wpState.logo = 'data:image/svg+xml;base64,' + btoa(svg); updateWpQR(); showToast('Prominall logosu eklendi'); }
 function wpRemoveLogo() { wpState.logo = null; updateWpQR(); showToast('Logo kaldırıldı'); }
-
 function setupQRDrag() {
-  const box = document.getElementById('wp-qr-box');
-  const screen = document.getElementById('wp-screen');
+  const box = document.getElementById('wp-qr-box'); const screen = document.getElementById('wp-screen');
   let dragging = false, offX = 0, offY = 0;
-  const start = (e) => {
-    e.preventDefault();
-    dragging = true;
-    const pt = e.touches ? e.touches[0] : e;
-    const rect = box.getBoundingClientRect();
-    offX = pt.clientX - rect.left;
-    offY = pt.clientY - rect.top;
-  };
-  const move = (e) => {
-    if (!dragging) return;
-    e.preventDefault();
-    const pt = e.touches ? e.touches[0] : e;
-    const sr = screen.getBoundingClientRect();
-    let x = pt.clientX - sr.left - offX;
-    let y = pt.clientY - sr.top - offY;
-    const bw = box.offsetWidth;
-    const bh = box.offsetHeight;
-    x = Math.max(0, Math.min(sr.width - bw, x));
-    y = Math.max(0, Math.min(sr.height - bh, y));
-    wpState.qrX = x / sr.width;
-    wpState.qrY = y / sr.height;
-    box.style.left = (wpState.qrX * 100) + '%';
-    box.style.top = (wpState.qrY * 100) + '%';
-  };
+  const start = (e) => { e.preventDefault(); dragging = true; const pt = e.touches ? e.touches[0] : e; const rect = box.getBoundingClientRect(); offX = pt.clientX - rect.left; offY = pt.clientY - rect.top; };
+  const move = (e) => { if (!dragging) return; e.preventDefault(); const pt = e.touches ? e.touches[0] : e; const sr = screen.getBoundingClientRect(); let x = pt.clientX - sr.left - offX; let y = pt.clientY - sr.top - offY; const bw = box.offsetWidth; const bh = box.offsetHeight; x = Math.max(0, Math.min(sr.width - bw, x)); y = Math.max(0, Math.min(sr.height - bh, y)); wpState.qrX = x / sr.width; wpState.qrY = y / sr.height; box.style.left = (wpState.qrX * 100) + '%'; box.style.top = (wpState.qrY * 100) + '%'; };
   const end = () => { dragging = false; };
-  box.onmousedown = start;
-  document.addEventListener('mousemove', move);
-  document.addEventListener('mouseup', end);
-  box.ontouchstart = start;
-  document.addEventListener('touchmove', move, {passive:false});
-  document.addEventListener('touchend', end);
+  box.onmousedown = start; document.addEventListener('mousemove', move); document.addEventListener('mouseup', end);
+  box.ontouchstart = start; document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('touchend', end);
 }
-
 function downloadWallpaper() {
   if (!wpState.bgImg) { showToast('Önce bir arka plan seç', true); return; }
   const W = 1170, H = 2532;
-  const canvas = document.createElement('canvas');
-  canvas.width = W; canvas.height = H;
+  const canvas = document.createElement('canvas'); canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
-  const bg = new Image();
-  bg.crossOrigin = 'anonymous';
+  const bg = new Image(); bg.crossOrigin = 'anonymous';
   bg.onload = () => {
-    const rBg = bg.width / bg.height;
-    const rC = W / H;
+    const rBg = bg.width / bg.height; const rC = W / H;
     let sx = 0, sy = 0, sw = bg.width, sh = bg.height;
-    if (rBg > rC) { sw = bg.height * rC; sx = (bg.width - sw) / 2; }
-    else { sh = bg.width / rC; sy = (bg.height - sh) / 2; }
+    if (rBg > rC) { sw = bg.height * rC; sx = (bg.width - sw) / 2; } else { sh = bg.width / rC; sy = (bg.height - sh) / 2; }
     ctx.drawImage(bg, sx, sy, sw, sh, 0, 0, W, H);
     const qrPx = Math.round(W * wpState.qrSize);
     const qrContainer = document.createElement('div');
     new QRCode(qrContainer, { text: window.location.origin + '/prm-cards/card.html?id=' + currentSlug, width: qrPx, height: qrPx, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
     setTimeout(() => {
-      const qrCanvas = qrContainer.querySelector('canvas');
-      if (!qrCanvas) { showToast('QR oluşturulamadı', true); return; }
-      const pad = Math.round(qrPx * 0.06);
-      const boxW = qrPx + pad * 2;
-      const boxH = qrPx + pad * 2;
-      const px = Math.round(wpState.qrX * W);
-      const py = Math.round(wpState.qrY * H);
+      const qrCanvas = qrContainer.querySelector('canvas'); if (!qrCanvas) { showToast('QR oluşturulamadı', true); return; }
+      const pad = Math.round(qrPx * 0.06); const boxW = qrPx + pad * 2; const boxH = qrPx + pad * 2;
+      const px = Math.round(wpState.qrX * W); const py = Math.round(wpState.qrY * H);
       ctx.fillStyle = 'rgba(255,255,255,' + wpState.bgOpacity + ')';
-      roundRect(ctx, px, py, boxW, boxH, 24);
-      ctx.fill();
+      roundRect(ctx, px, py, boxW, boxH, 24); ctx.fill();
       ctx.drawImage(qrCanvas, px + pad, py + pad, qrPx, qrPx);
-      const finish = () => {
-        const a = document.createElement('a');
-        a.href = canvas.toDataURL('image/png');
-        a.download = 'Wallpaper_' + currentSlug + '_1170x2532.png';
-        a.click();
-        showToast('Wallpaper indirildi! 📱');
-      };
-      if (wpState.logo) {
-        const lg = new Image();
-        lg.onload = () => {
-          const ls = qrPx * 0.22;
-          const lpad = ls * 0.1;
-          const lx = px + pad + (qrPx - ls) / 2;
-          const ly = py + pad + (qrPx - ls) / 2;
-          ctx.fillStyle = '#FFFFFF';
-          ctx.fillRect(lx - lpad, ly - lpad, ls + lpad*2, ls + lpad*2);
-          ctx.drawImage(lg, lx, ly, ls, ls);
-          finish();
-        };
-        lg.src = wpState.logo;
-      } else { finish(); }
+      const finish = () => { const a = document.createElement('a'); a.href = canvas.toDataURL('image/png'); a.download = 'Wallpaper_' + currentSlug + '_1170x2532.png'; a.click(); showToast('Wallpaper indirildi! 📱'); };
+      if (wpState.logo) { const lg = new Image(); lg.onload = () => { const ls = qrPx * 0.22; const lpad = ls * 0.1; const lx = px + pad + (qrPx - ls) / 2; const ly = py + pad + (qrPx - ls) / 2; ctx.fillStyle = '#FFFFFF'; ctx.fillRect(lx - lpad, ly - lpad, ls + lpad*2, ls + lpad*2); ctx.drawImage(lg, lx, ly, ls, ls); finish(); }; lg.src = wpState.logo; } else { finish(); }
     }, 100);
   };
   bg.src = wpState.bgImg;
 }
-
-function roundRect(ctx, x, y, w, h, r) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
+function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
 
 async function saveCard() {
   const data = getFormData();
   if (!data.name) { showToast('Please enter a name', true); return; }
   const slug = editMode ? editingId : toSlug(data.name);
-  data.id = slug;
-  data.updatedAt = new Date().toISOString();
+  data.id = slug; data.updatedAt = new Date().toISOString();
   const ok = await apiSave(data);
-  if (ok) { showToast(editMode ? 'Card updated!' : 'Card saved!'); if (!editMode) cancelEdit(); loadTeam(); }
-  else showToast('Save failed', true);
+  if (ok) { showToast(editMode ? 'Card updated!' : 'Card saved!'); if (!editMode) cancelEdit(); loadTeam(); } else showToast('Save failed', true);
 }
-
 function enterEditMode(id) {
-  const m = teamData.find(x => x.id === id);
-  if (!m) return;
-  editMode = true;
-  editingId = m.id;
+  const m = teamData.find(x => x.id === id); if (!m) return;
+  editMode = true; editingId = m.id;
   document.getElementById('f-name').value = m.name || '';
   document.getElementById('f-title').value = m.title || '';
   document.getElementById('f-company').value = m.company || 'Prominall GmbH';
@@ -581,6 +580,7 @@ function enterEditMode(id) {
   document.getElementById('f-linkedin').value = m.linkedin || '';
   document.getElementById('f-addr').value = m.addr || '';
   document.getElementById('f-photo').value = m.photo || '';
+  document.getElementById('f-cert').value = m.cert !== undefined ? m.cert : '';
   document.getElementById('edit-banner').style.display = 'block';
   document.getElementById('edit-banner').textContent = 'Editing: ' + m.name;
   document.getElementById('btn-cancel').style.display = 'block';
@@ -590,10 +590,9 @@ function enterEditMode(id) {
   document.querySelector('.sidebar').scrollTop = 0;
   generateCard();
 }
-
 function cancelEdit() {
   editMode = false; editingId = '';
-  ['f-name','f-title','f-phone','f-email','f-web','f-linkedin','f-addr','f-photo'].forEach(id => document.getElementById(id).value = '');
+  ['f-name','f-title','f-phone','f-email','f-web','f-linkedin','f-addr','f-photo','f-cert'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('f-company').value = 'Prominall GmbH';
   document.getElementById('edit-banner').style.display = 'none';
   document.getElementById('btn-cancel').style.display = 'none';
@@ -602,93 +601,37 @@ function cancelEdit() {
   document.getElementById('result-area').innerHTML = '';
   updateSlugPreview();
 }
-
 async function deleteMember(id) {
   if (!confirm('Delete this card?')) return;
   const ok = await apiDelete(id);
-  if (ok) { showToast('Card deleted'); if (editingId === id) cancelEdit(); loadTeam(); }
-  else showToast('Delete failed', true);
+  if (ok) { showToast('Card deleted'); if (editingId === id) cancelEdit(); loadTeam(); } else showToast('Delete failed', true);
 }
-
 function copyUrl() { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/prm-cards/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
 function copySlug() { if (currentSlug) navigator.clipboard.writeText(currentSlug).then(() => showToast('Slug copied!')); }
 function copyUrl2(id) { navigator.clipboard.writeText(window.location.origin + '/prm-cards/card.html?id=' + id).then(() => showToast('URL copied!')); }
-
-function downloadQR() {
-  const c = document.querySelector('#qr-display canvas');
-  if (!c) { showToast('Generate a card first', true); return; }
-  const a = document.createElement('a');
-  a.href = c.toDataURL('image/png');
-  a.download = 'QR_' + currentSlug + '_' + qrOptions.size + 'px.png';
-  a.click();
-  showToast('QR indirildi!');
-}
-
-function downloadQRHD() {
-  if (!currentSlug) { showToast('Generate a card first', true); return; }
-  const savedSize = qrOptions.size;
-  qrOptions.size = 1200;
-  const url = window.location.origin + '/prm-cards/card.html?id=' + currentSlug;
-  const tempContainer = document.createElement('div');
-  tempContainer.id = 'qr-temp-hd';
-  tempContainer.style.position = 'fixed';
-  tempContainer.style.left = '-9999px';
-  document.body.appendChild(tempContainer);
-  renderQR(url, 'qr-temp-hd');
-  setTimeout(() => {
-    const c = tempContainer.querySelector('canvas');
-    if (c) {
-      const a = document.createElement('a');
-      a.href = c.toDataURL('image/png');
-      a.download = 'QR_' + currentSlug + '_HD_1200px.png';
-      a.click();
-      showToast('HD QR indirildi!');
-    }
-    document.body.removeChild(tempContainer);
-    qrOptions.size = savedSize;
-  }, 500);
-}
-
 function printQR() {
-  const c = document.querySelector('#qr-display canvas');
-  if (!c) { showToast('Generate a card first', true); return; }
+  const c = document.querySelector('#qr-display canvas'); if (!c) { showToast('Generate a card first', true); return; }
   const w = window.open('', '', 'width=600,height=700');
   w.document.write('<html><body style="text-align:center;padding:2rem;font-family:sans-serif"><h2>' + (document.querySelector('.result-name')?.textContent || '') + '</h2><img src="' + c.toDataURL() + '" style="max-width:100%"></body></html>');
-  w.document.close();
-  setTimeout(() => w.print(), 300);
+  w.document.close(); setTimeout(() => w.print(), 300);
 }
-
 let toastTimer;
-function showToast(msg, isError = false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (isError ? ' error' : '');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
+function showToast(msg, isError = false) { const t = document.getElementById('toast'); t.textContent = msg; t.className = 'toast show' + (isError ? ' error' : ''); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2500); }
 async function loadTeam() {
-  const grid = document.getElementById('team-grid');
-  grid.innerHTML = '<div class="loading-team">Loading...</div>';
+  const grid = document.getElementById('team-grid'); grid.innerHTML = '<div class="loading-team">Loading...</div>';
   try {
     teamData = await apiGet();
-    if (!teamData.length) {
-      grid.innerHTML = '<div class="empty-state"><h3>No cards yet</h3><p>Create your first card using the form.</p></div>';
-      document.getElementById('team-count').textContent = '';
-      return;
-    }
+    if (!teamData.length) { grid.innerHTML = '<div class="empty-state"><h3>No cards yet</h3><p>Create your first card using the form.</p></div>'; document.getElementById('team-count').textContent = ''; return; }
     document.getElementById('team-count').textContent = teamData.length + ' member' + (teamData.length !== 1 ? 's' : '');
     grid.innerHTML = '';
     teamData.forEach(m => {
-      const d = document.createElement('div');
-      d.className = 'team-card' + (editingId === m.id ? ' active-edit' : '');
+      const d = document.createElement('div'); d.className = 'team-card' + (editingId === m.id ? ' active-edit' : '');
       const q = "'";
       d.innerHTML = '<div style="display:flex;align-items:center;gap:12px"><div class="team-avatar-sm">' + getInitials(m.name) + '</div><div class="team-info"><div class="team-name">' + m.name + '</div><div class="team-role">' + (m.title || '') + '</div></div><div class="team-actions"><button class="mini-btn" title="Edit" onclick="enterEditMode(' + q + m.id + q + ')">' + EI + '</button><button class="mini-btn" title="Copy" onclick="copyUrl2(' + q + m.id + q + ')">' + CI + '</button><button class="mini-btn delete-btn" title="Delete" onclick="deleteMember(' + q + m.id + q + ')">' + DI + '</button></div></div>';
       grid.appendChild(d);
     });
   } catch (e) { grid.innerHTML = '<div style="color:#A33D2D;padding:1rem;">Connection error.</div>'; }
 }
-
 updateSlugPreview();
 loadTeam();
 </script>
