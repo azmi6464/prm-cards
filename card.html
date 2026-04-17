@@ -42,9 +42,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;d
 #qr-code{display:flex;justify-content:center;margin-bottom:0.75rem}
 #qr-code canvas,#qr-code img{border-radius:8px}
 .qr-caption{font-size:12px;color:var(--light-olive)}
-.card-footer{padding:1rem 2rem;border-top:1px solid rgba(75,92,62,0.08);display:flex;align-items:center;justify-content:space-between}
+.card-footer{padding:1rem 2rem;border-top:1px solid rgba(75,92,62,0.08);display:flex;align-items:center;justify-content:space-between;gap:12px}
 .footer-brand{font-family:'Cormorant Garamond',serif;font-size:12px;color:var(--light-olive)}
-.footer-cert{font-size:10px;color:var(--gold);letter-spacing:0.06em}
+.footer-cert{font-size:10px;color:var(--gold);letter-spacing:0.06em;text-align:right}
 .loading{text-align:center;padding:3rem;color:var(--light-olive);font-size:14px}
 .loading-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber);animation:pulse 1.2s ease-in-out infinite;margin:0 3px}
 .loading-dot:nth-child(2){animation-delay:0.2s}
@@ -57,34 +57,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);min-height:100vh;d
 </head>
 <body>
 <div class="card-wrap">
-  <div id="loading-state" class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
-  <div class="card" id="main-card" style="display:none;">
-    <div class="card-header">
-      <div class="company-logo"><div class="logo-mark">P</div><span class="company-name" id="hdr-company">Prominall GmbH</span></div>
-      <div id="avatar-area"></div>
-      <div class="person-name" id="hdr-name"></div>
-      <div class="person-title" id="hdr-title"></div>
-    </div>
-    <div class="card-body">
-      <ul class="contact-list" id="contact-list"></ul>
-      <div class="divider"></div>
-      <a class="save-btn" id="save-btn" href="#" download>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Save Contact
-      </a>
-      <div class="share-section">
-        <div class="share-label">Scan to Share</div>
-        <div id="qr-code"></div>
-        <div class="qr-caption">Scan with any camera app</div>
-      </div>
-    </div>
-    <div class="card-footer"><span class="footer-brand">prominall.com</span><span class="footer-cert">GMP+ · ISO 22000 · HACCP</span></div>
-  </div>
-  <div id="not-found" style="display:none;" class="not-found">
-    <div class="logo-mark" style="margin:0 auto 1rem;width:48px;height:48px;font-size:22px;">P</div>
-    <h2>Card not found</h2>
-    <p style="font-size:14px;color:#6B7D5E;">This link may be invalid. Please contact the person directly.</p>
-  </div>
+<div id="loading-state" class="loading"><span class="loading-dot"></span><span class="loading-dot"></span><span class="loading-dot"></span></div>
+<div class="card" id="main-card" style="display:none;">
+<div class="card-header">
+<div class="company-logo"><div class="logo-mark">P</div><span class="company-name" id="hdr-company">Prominall GmbH</span></div>
+<div id="avatar-area"></div>
+<div class="person-name" id="hdr-name"></div>
+<div class="person-title" id="hdr-title"></div>
+</div>
+<div class="card-body">
+<ul class="contact-list" id="contact-list"></ul>
+<div class="divider"></div>
+<a class="save-btn" id="save-btn" href="#" download>
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+Save Contact
+</a>
+<div class="share-section">
+<div class="share-label">Scan to Share</div>
+<div id="qr-code"></div>
+<div class="qr-caption">Scan with any camera app</div>
+</div>
+</div>
+<div class="card-footer"><span class="footer-brand" id="footer-brand">prominall.com</span><span class="footer-cert" id="footer-cert">GMP+ · ISO 22000 · HACCP</span></div>
+</div>
+<div id="not-found" style="display:none;" class="not-found">
+<div class="logo-mark" style="margin:0 auto 1rem;width:48px;height:48px;font-size:22px;">P</div>
+<h2>Card not found</h2>
+<p style="font-size:14px;color:#6B7D5E;">This link may be invalid. Please contact the person directly.</p>
+</div>
 </div>
 <script>
 const FIREBASE_URL='https://prm-cards-default-rtdb.europe-west1.firebasedatabase.app';
@@ -96,7 +96,7 @@ async function init(){
     try{const res=await fetch(FIREBASE_URL+'/cards/'+encodeURIComponent(slugId)+'.json');if(res.ok){const j=await res.json();if(j&&j.name)data=j;}}catch(e){}
     if(!data){document.getElementById('loading-state').style.display='none';document.getElementById('not-found').style.display='block';return;}
   }else if(p.get('n')){
-    data={name:p.get('n')||'',title:p.get('t')||'',company:p.get('c')||'Prominall GmbH',phone:p.get('p')||'',email:p.get('e')||'',web:p.get('w')||'prominall.com',linkedin:p.get('li')||'',addr:p.get('a')||'',photo:p.get('img')||''};
+    data={name:p.get('n')||'',title:p.get('t')||'',company:p.get('c')||'Prominall GmbH',phone:p.get('p')||'',email:p.get('e')||'',web:p.get('w')||'prominall.com',linkedin:p.get('li')||'',addr:p.get('a')||'',photo:p.get('img')||'',cert:p.get('cert')||''};
   }else{document.getElementById('loading-state').style.display='none';document.getElementById('not-found').style.display='block';return;}
   renderCard(data);
 }
@@ -107,9 +107,22 @@ function renderCard(data){
   document.getElementById('hdr-name').textContent=data.name;
   document.getElementById('hdr-title').textContent=data.title||'';
   document.getElementById('hdr-company').textContent=data.company||'Prominall GmbH';
+  const certEl=document.getElementById('footer-cert');
+  if(data.cert!==undefined && data.cert!==null){
+    const v=String(data.cert).trim();
+    if(v===''){certEl.style.display='none';}else{certEl.textContent=v;}
+  }else{
+    certEl.textContent='GMP+ · ISO 22000 · HACCP';
+  }
   const aa=document.getElementById('avatar-area');
-  if(data.photo){const img=document.createElement('img');img.className='avatar-img';img.src=data.photo;img.alt=data.name;img.onerror=()=>{img.style.display='none';si();};aa.appendChild(img);}else{si();}
-  function si(){const d=document.createElement('div');d.className='avatar-initials';d.textContent=data.name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();aa.appendChild(d);}
+  if(data.photo){
+    const img=document.createElement('img');
+    img.className='avatar-img';
+    img.src=data.photo;
+    img.alt=data.name;
+    img.onerror=()=>{img.remove();};
+    aa.appendChild(img);
+  }
   const list=document.getElementById('contact-list');
   const ph='<svg viewBox="0 0 24 24" fill="none" stroke="#4B5C3E" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.06 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>';
   const em='<svg viewBox="0 0 24 24" fill="none" stroke="#C37113" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>';
