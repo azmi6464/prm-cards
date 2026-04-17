@@ -279,7 +279,7 @@ function generateCard() {
   if (!data.name) { showToast('Please enter a name', true); return; }
   const slug = editMode ? editingId : toSlug(data.name);
   currentSlug = slug;
-  const url = window.location.origin + '/prominall/card.html?id=' + slug;
+  const url = window.location.origin + '/card.html?id=' + slug;
   document.getElementById('slug-preview').textContent = editMode ? 'Editing: ' + slug : 'card.html?id=' + slug;
   const ra = document.getElementById('result-area');
   ra.innerHTML = '<div class="result-card"><div class="result-header"><div style="display:flex;align-items:center;gap:12px"><div class="result-avatar">' + getInitials(data.name) + '</div><div><div class="result-name">' + data.name + '</div><div class="result-title">' + (data.title||'') + '</div></div></div></div>' +
@@ -319,7 +319,7 @@ function updateQROption() {
   qrOptions.size = parseInt(document.getElementById('qr-size').value);
   qrOptions.fgColor = document.getElementById('qr-fg').value;
   qrOptions.bgColor = document.getElementById('qr-bg').value;
-  const url = window.location.origin + '/prominall/card.html?id=' + currentSlug;
+  const url = window.location.origin + '/card.html?id=' + currentSlug;
   renderQR(url, 'qr-display');
   const sizeLabel = document.querySelector('.qr-area div:last-child');
   if (sizeLabel) sizeLabel.textContent = qrOptions.size + 'x' + qrOptions.size + ' px';
@@ -367,7 +367,7 @@ function dlCanvas(canvas, filename){ const a=document.createElement('a'); a.href
 async function downloadQR(style){
   if(!currentSlug){ showToast('Önce kart oluştur', true); return; }
   document.getElementById('dl-menu-list')?.classList.remove('show');
-  const url = window.location.origin + '/prominall/card.html?id=' + currentSlug;
+  const url = window.location.origin + '/card.html?id=' + currentSlug;
   const data = getFormData();
   if(style==='plain'){
     const qr = await buildQRCanvas(url, qrOptions.size, qrOptions.fgColor, qrOptions.bgColor);
@@ -510,7 +510,7 @@ function updateBgOpacity(val) { wpState.bgOpacity = parseInt(val) / 100; documen
 function setWpColor(color) { wpState.qrColor = color; document.getElementById('wp-qr-color').value = color; updateWpQR(); }
 function updateWpQR() {
   wpState.qrColor = document.getElementById('wp-qr-color').value;
-  const url = window.location.origin + '/prominall/card.html?id=' + currentSlug;
+  const url = window.location.origin + '/card.html?id=' + currentSlug;
   const container = document.createElement('div');
   new QRCode(container, { text: url, width: 400, height: 400, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
   setTimeout(() => {
@@ -544,7 +544,7 @@ function downloadWallpaper() {
     ctx.drawImage(bg, sx, sy, sw, sh, 0, 0, W, H);
     const qrPx = Math.round(W * wpState.qrSize);
     const qrContainer = document.createElement('div');
-    new QRCode(qrContainer, { text: window.location.origin + '/prominall/card.html?id=' + currentSlug, width: qrPx, height: qrPx, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
+    new QRCode(qrContainer, { text: window.location.origin + '/card.html?id=' + currentSlug, width: qrPx, height: qrPx, colorDark: wpState.qrColor, colorLight: '#FFFFFF', correctLevel: QRCode.CorrectLevel.H });
     setTimeout(() => {
       const qrCanvas = qrContainer.querySelector('canvas'); if (!qrCanvas) { showToast('QR oluşturulamadı', true); return; }
       const pad = Math.round(qrPx * 0.06); const boxW = qrPx + pad * 2; const boxH = qrPx + pad * 2;
@@ -606,9 +606,9 @@ async function deleteMember(id) {
   const ok = await apiDelete(id);
   if (ok) { showToast('Card deleted'); if (editingId === id) cancelEdit(); loadTeam(); } else showToast('Delete failed', true);
 }
-function copyUrl() { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/prominall/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
+function copyUrl() { if (currentSlug) navigator.clipboard.writeText(window.location.origin + '/card.html?id=' + currentSlug).then(() => showToast('URL copied!')); }
 function copySlug() { if (currentSlug) navigator.clipboard.writeText(currentSlug).then(() => showToast('Slug copied!')); }
-function copyUrl2(id) { navigator.clipboard.writeText(window.location.origin + '/prominall/card.html?id=' + id).then(() => showToast('URL copied!')); }
+function copyUrl2(id) { navigator.clipboard.writeText(window.location.origin + '/card.html?id=' + id).then(() => showToast('URL copied!')); }
 function printQR() {
   const c = document.querySelector('#qr-display canvas'); if (!c) { showToast('Generate a card first', true); return; }
   const w = window.open('', '', 'width=600,height=700');
